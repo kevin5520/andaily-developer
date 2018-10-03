@@ -1,0 +1,23 @@
+<div>
+    Creator: <span class='text-info'>$creator$</span><br/>
+    Created time: <span class='text-info'>$createTime$</span><br/>
+    Estimate time: <span class='text-info'>$estimateTime$</span><br/>
+    Priority: <span class='text-warning'>$priority$</span><br/>
+    $if(isPending)$
+    Starting time: <span class='text-info'>$pendingTime$</span><br/>
+    $endif$
+    $if(isCanceled)$
+    Canceled time: <span class='text-info'>$cancelTime$</span><br/>
+    Canceled user: <span class='text-info'>$cancelUser$</span><br/>
+    $endif$
+    $if(isFinished)$
+    Finished time: <span class='text-info'>$finishTime$</span><br/>
+    Actual used: <span class='text-info'>$actualUsedTime$</span> $timeDifferenceAsHtml$<br/>
+    <span class='text-info'>$finishComment$</span><br/>
+    $endif$
+
+    $if(urgent)$
+    <span class='red'>Urgent</span><br/>
+    $endif$
+    <span class='text-info'>$description$</span><br/>
+</div>

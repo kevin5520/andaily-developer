@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/security
+                        http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+    <!--<debug/>-->
+
+    <!--static url pattern-->
+    <http pattern="/css/**" security="none"/>
+    <http pattern="/js/**" security="none"/>
+    <http pattern="/images/**" security="none"/>
+    <http pattern="/developer/login*" security="none"/>
+    <http pattern="/login*" security="none"/>
+
+
+    <http auto-config="true" authentication-manager-ref="authenticationManager"
+          access-denied-page="/developer/login?error=2">
+
+        <!--Super man -->
+        <intercept-url pattern="/developer/user_/**" access="ROLE_SUPER_MAN"/>
+        <intercept-url pattern="/developer/team_/**" access="ROLE_SUPER_MAN"/>
+        <intercept-url pattern="/developer/system/**" access="ROLE_SUPER_MAN"/>
+
+        <!--Project privileges-->
+        <intercept-url pattern="/developer/project_form/**" access="ROLE_SUPER_MAN,ROLE_PRODUCT_OWNER"/>
+        <intercept-url pattern="/developer/project_/archive/**" access="ROLE_SUPER_MAN,ROLE_PRODUCT_OWNER"/>
+
+
+        <!--Backlog privileges-->
+        <intercept-url pattern="/developer/backlog_form/**" access="ROLE_MASTER,ROLE_PRODUCT_OWNER"/>
+        <intercept-url pattern="/developer/backlog_action/archive/**" access="ROLE_MASTER,ROLE_PRODUCT_OWNER"/>
+        <intercept-url pattern="/developer/backlog_overview*" access="ROLE_MASTER,ROLE_PRODUCT_OWNER,ROLE_MEMBER"/>
+
+        <!--Sprint privileges-->
+        <intercept-url pattern="/developer/sprint_form/**" access="ROLE_MASTER,ROLE_PRODUCT_OWNER"/>
+        <intercept-url pattern="/developer/sprint_action/archive/**" access="ROLE_MASTER,ROLE_PRODUCT_OWNER"/>
+        <intercept-url pattern="/developer/sprint_action/set_default/**" access="ROLE_MASTER,ROLE_PRODUCT_OWNER"/>
+        <intercept-url pattern="/developer/sprint_action/cancel_default/**" access="ROLE_MASTER,ROLE_PRODUCT_OWNER"/>
+
+        <intercept-url pattern="/developer/sprint_action/start/**" access="ROLE_MASTER,ROLE_PRODUCT_OWNER"/>
+        <intercept-url pattern="/developer/sprint_action/check_start/**" access="ROLE_MASTER,ROLE_PRODUCT_OWNER"/>
+
+        <intercept-url pattern="/developer/sprint_action/finish/**" access="ROLE_MASTER,ROLE_PRODUCT_OWNER"/>
+        <intercept-url pattern="/developer/sprint_action/check_finish/**" access="ROLE_MASTER,ROLE_PRODUCT_OWNER"/>
+
+        <intercept-url pattern="/developer/sprint_overview*" access="ROLE_MASTER,ROLE_PRODUCT_OWNER,ROLE_MEMBER"/>
+        <intercept-url pattern="/developer/sprint_action/manage_backlogs/**" access="ROLE_MASTER,ROLE_PRODUCT_OWNER"/>
+
+        <!--Task privileges-->
+        <intercept-url pattern="/developer/task_form/**" access="ROLE_MASTER,ROLE_MEMBER"/>
+        <intercept-url pattern="/developer/task_action/archive/**" access="ROLE_MASTER,ROLE_MEMBER"/>
+
+        <intercept-url pattern="/developer/task_action/start/**" access="ROLE_MASTER,ROLE_MEMBER"/>
+
+        <intercept-url pattern="/developer/task_action/finish/**" access="ROLE_MASTER,ROLE_MEMBER"/>
+        <intercept-url pattern="/developer/task_action/finishform/**" access="ROLE_MASTER,ROLE_MEMBER"/>
+
+        <intercept-url pattern="/developer/task_action/revert/**" access="ROLE_MASTER,ROLE_MEMBER"/>
+        <intercept-url pattern="/developer/task_action/cancel/**" access="ROLE_MASTER,ROLE_MEMBER"/>
+
+        <intercept-url pattern="/developer/task_action/restore/**" access="ROLE_MASTER,ROLE_MEMBER"/>
+
+        <intercept-url pattern="/developer/task_action/load_move/**" access="ROLE_MASTER,ROLE_PRODUCT_OWNER"/>
+        <intercept-url pattern="/developer/task_action/move_task*" access="ROLE_MASTER,ROLE_PRODUCT_OWNER"/>
+
+        <intercept-url pattern="/developer/task_action/assign_task_form/**" access="ROLE_MASTER"/>
+        <intercept-url pattern="/developer/task_action/assign_task_submit/**" access="ROLE_MASTER"/>
+
+
+        <!--My profile privileges-->
+        <intercept-url pattern="/developer/my_profile/team*" access="ROLE_MASTER,ROLE_MEMBER"/>
+
+
+        <!--Anonymous is forbidden-->
+        <intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
+
+        <custom-filter ref="andailyRememberMeFilter" before="FORM_LOGIN_FILTER"/>
+
+        <form-login authentication-failure-url="/developer/login?error=1"
+                    default-target-url="/developer/" login-processing-url="/signin"
+                    authentication-success-handler-ref="authenticationSuccessHandler"
+                    login-page="/developer/login"/>
+
+        <logout logout-success-url="/developer/login" logout-url="/signout"/>
+    </http>
+
+    <beans:bean id="authenticationSuccessHandler" class="com.andaily.web.context.AndailyAuthenticationSuccessHandler"/>
+
+    <beans:bean id="andailyRememberMeFilter" class="com.andaily.web.filter.AndailyRememberMeFilter"/>
+
+    <authentication-manager id="authenticationManager">
+        <authentication-provider user-service-ref="securityService">
+            <password-encoder hash="md5"/>
+        </authentication-provider>
+    </authentication-manager>
+
+    <beans:bean id="securityService" class="com.andaily.service.impl.SecurityServiceImpl"/>
+
+    <!--security holder-->
+    <beans:bean id="springSecurityHolder" class="com.andaily.web.context.SpringSecurityHolder"/>
+
+    <beans:bean id="securityHolderFactory" class="com.andaily.domain.shared.security.SecurityUtils">
+        <beans:property name="securityHolder" ref="springSecurityHolder"/>
+    </beans:bean>
+
+</beans:beans>

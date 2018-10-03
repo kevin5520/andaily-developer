@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.infrastructure.mybatis.developer.BacklogRepositoryMyBatis">
+
+    <resultMap type="Backlog" id="backlogMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="priority" column="priority"/>
+        <result property="content" column="content"/>
+        <result property="type" column="type_"/>
+        <result property="joinSprintTime" column="join_sprint_time"/>
+        <result property="estimateTime" column="estimate_time"/>
+
+        <result property="number" column="number_"/>
+
+        <association property="sprint" column="sprint_id"
+                     select="com.andaily.infrastructure.mybatis.developer.SprintRepositoryMyBatis.findSprintById"/>
+        <association property="creator" column="creator_id"
+                     select="com.andaily.infrastructure.mybatis.user.UserRepositoryMyBatis.findUserById"/>
+        <association property="joinSprintUser" column="join_sprint_user_id"
+                     select="com.andaily.infrastructure.mybatis.user.UserRepositoryMyBatis.findUserById"/>
+
+        <association property="project" column="project_id"
+                     select="com.andaily.infrastructure.mybatis.developer.ProjectRepositoryMyBatis.findProjectById"/>
+
+        <collection property="documents" column="id"
+                    select="com.andaily.infrastructure.mybatis.developer.CommonsRepositoryMyBatis.findBacklogDocumentByBacklogId"
+                    ofType="BacklogDocument"/>
+    </resultMap>
+
+
+    <select id="findByGuid" parameterType="String" resultMap="backlogMap">
+         select a.* from backlog a where a.guid = #{guid}
+         and a.archived = 0
+	</select>
+
+    <select id="maxBacklogNumber" resultType="int">
+         select coalesce(max(a.number_),0) from backlog a
+	</select>
+
+    <select id="findUnusedBacklogsByProject" parameterType="Project" resultMap="backlogMap">
+         select a.* from backlog a
+         where a.project_id = #{id}
+         and a.archived = 0
+         and a.sprint_id is null
+	</select>
+
+    <select id="findOverviewBacklogs" parameterType="map" resultMap="backlogMap">
+        select a.* from backlog a, project p
+        where a.archived = 0
+        and p.id = a.project_id
+        and p.archived = 0
+        <if test="type != null">
+            and a.type_ = #{type}
+        </if>
+        <if test="number != null">
+            and a.number_ = #{number}
+        </if>
+        <if test="priority != null">
+            and a.priority = #{priority}
+        </if>
+        <if test="projectGuid != null">
+            and p.guid = #{projectGuid}
+        </if>
+        <if test="sprintGuid != null">
+            and a.sprint_id = (
+            select id from sprint where guid = #{sprintGuid}
+            )
+        </if>
+        <if test="isProductOwner != null">
+            and p.id in (
+            select project_id from project_product_owner
+            where product_owner_id = #{currUser.id}
+            )
+        </if>
+        <if test="isTeamMember != null">
+            and p.id in (
+            select project_id from team_project
+            where team_id = #{currUser.team.id}
+            )
+        </if>
+        order by a.create_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalOverviewBacklogs" parameterType="map" resultType="int">
+        select count(a.id) from backlog a, project p
+        where a.archived = 0
+        and p.id = a.project_id
+        and p.archived = 0
+        <if test="type != null">
+            and a.type_ = #{type}
+        </if>
+        <if test="number != null">
+            and a.number_ = #{number}
+        </if>
+        <if test="priority != null">
+            and a.priority = #{priority}
+        </if>
+        <if test="projectGuid != null">
+            and p.guid = #{projectGuid}
+        </if>
+        <if test="sprintGuid != null">
+            and a.sprint_id = (
+            select id from sprint where guid = #{sprintGuid}
+            )
+        </if>
+        <if test="isProductOwner != null">
+            and p.id in (
+            select project_id from project_product_owner
+            where product_owner_id = #{currUser.id}
+            )
+        </if>
+        <if test="isTeamMember != null">
+            and p.id in (
+            select project_id from team_project
+            where team_id = #{currUser.team.id}
+            )
+        </if>
+    </select>
+
+    <select id="findBacklogByProjectId" parameterType="int" resultMap="backlogMap">
+         select a.* from backlog a
+         where a.project_id = #{id}
+         and a.archived = 0
+	</select>
+
+    <select id="findAvailableBacklogs" parameterType="String" resultMap="backlogMap">
+         select a.* from backlog a, project p
+         where a.sprint_id is null
+         and a.archived = 0
+         and a.project_id = p.id
+         and p.guid = #{projectGuid}
+	</select>
+
+    <select id="findBacklogById" parameterType="int" resultMap="backlogMap">
+         select a.* from backlog a where a.id = #{id}
+         and a.archived = 0
+	</select>
+
+    <select id="findSprintBacklogs" parameterType="String" resultMap="backlogMap">
+         select a.* from backlog a
+         where a.sprint_id = (
+         select s.id from sprint s where s.guid = #{sprintGuid}
+         )
+         and a.archived = 0
+	</select>
+
+    <select id="findBacklogBySprintId" parameterType="int" resultMap="backlogMap">
+      select b.*
+      from backlog b
+      where  b.sprint_id = #{sprintId}
+      and b.archived = 0
+    </select>
+
+    <insert id="saveBacklog" parameterType="Backlog" useGeneratedKeys="true" keyProperty="id">
+        insert into backlog(
+        guid, create_time, archived, content, priority, type_, sprint_id,
+        creator_id, join_sprint_user_id, join_sprint_time, estimate_time,
+        project_id,number_)
+        values (
+        #{guid}, #{createTime}, #{archived}, #{content}, #{priority}, #{type}, #{sprint.id},
+        #{creator.id}, #{joinSprintUser.id}, #{joinSprintTime}, #{estimateTime},
+        #{project.id},#{number})
+    </insert>
+
+    <update id="updateBacklog" parameterType="Backlog" flushCache="true">
+        update backlog set
+        archived = #{archived},
+        content = #{content},
+        priority = #{priority},
+        type_ = #{type},
+        sprint_id = #{sprint.id},
+        creator_id = #{creator.id},
+        join_sprint_user_id = #{joinSprintUser.id},
+        estimate_time = #{estimateTime},
+        join_sprint_time = #{joinSprintTime}
+        where guid = #{guid}
+    </update>
+
+    <update id="updateSprintBacklogs" flushCache="true">
+        update backlog b set
+        b.join_sprint_time = now(),
+        b.join_sprint_user_id= #{user.id},
+        b.sprint_id = (
+        select s.id from sprint s where s.guid = #{sprintGuid}
+        )
+        where b.guid in
+        <foreach item="item" index="index" collection="backlogGuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="cleanBacklogsSprint" flushCache="true">
+        update backlog b set
+        b.sprint_id = null
+        where b.guid in
+        <foreach item="item" index="index" collection="backlogs" open="(" separator="," close=")">
+            #{item.guid}
+        </foreach>
+    </update>
+
+
+</mapper>

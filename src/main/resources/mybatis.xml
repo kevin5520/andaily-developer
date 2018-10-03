@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <settings>
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <setting name="useGeneratedKeys" value="true"/>
+    </settings>
+    <typeAliases>
+        <typeAlias alias="User" type="com.andaily.domain.user.User"/>
+        <typeAlias alias="Developer" type="com.andaily.domain.user.Developer"/>
+
+        <typeAlias alias="Backlog" type="com.andaily.domain.developer.Backlog"/>
+        <typeAlias alias="Sprint" type="com.andaily.domain.developer.Sprint"/>
+        <typeAlias alias="SprintTask" type="com.andaily.domain.developer.SprintTask"/>
+        <typeAlias alias="ScrumComment" type="com.andaily.domain.developer.ScrumComment"/>
+
+        <typeAlias alias="SprintMeeting" type="com.andaily.domain.developer.SprintMeeting"/>
+        <typeAlias alias="SprintMeetingDeveloper" type="com.andaily.domain.developer.SprintMeetingDeveloper"/>
+        <typeAlias alias="SprintTaskMoveRecord" type="com.andaily.domain.developer.SprintTaskMoveRecord"/>
+
+        <typeAlias alias="Project" type="com.andaily.domain.developer.project.Project"/>
+        <typeAlias alias="ProjectProductOwner" type="com.andaily.domain.developer.project.ProjectProductOwner"/>
+
+        <typeAlias alias="Team" type="com.andaily.domain.team.Team"/>
+        <typeAlias alias="TeamProject" type="com.andaily.domain.team.TeamProject"/>
+
+        <typeAlias alias="GeckoFile" type="com.andaily.domain.developer.commons.GeckoFile"/>
+        <typeAlias alias="Document" type="com.andaily.domain.developer.commons.Document"/>
+        <typeAlias alias="BacklogDocument" type="com.andaily.domain.developer.BacklogDocument"/>
+
+        <typeAlias alias="SprintTaskComment" type="com.andaily.domain.developer.SprintTaskComment"/>
+        <typeAlias alias="Log" type="com.andaily.domain.log.Log"/>
+        <typeAlias alias="SprintActivityLog" type="com.andaily.domain.log.SprintActivityLog"/>
+
+        <typeAlias alias="SystemConfiguration" type="com.andaily.domain.shared.system.SystemConfiguration"/>
+
+
+        <!--data-->
+        <typeAlias alias="SimpleProjectData" type="com.andaily.infrastructure.mybatis.data.SimpleProjectData"/>
+        <typeAlias alias="ScrumTermData" type="com.andaily.infrastructure.mybatis.data.ScrumTermData"/>
+        <typeAlias alias="SprintTaskTimeData" type="com.andaily.infrastructure.mybatis.data.SprintTaskTimeData"/>
+
+    </typeAliases>
+
+    <mappers>
+        <mapper resource="com/andaily/infrastructure/mybatis/user/UserMapper.xml"/>
+        <mapper resource="com/andaily/infrastructure/mybatis/user/DeveloperMapper.xml"/>
+
+        <mapper resource="com/andaily/infrastructure/mybatis/developer/SprintMapper.xml"/>
+        <mapper resource="com/andaily/infrastructure/mybatis/developer/BacklogMapper.xml"/>
+
+        <mapper resource="com/andaily/infrastructure/mybatis/developer/ScrumMapper.xml"/>
+        <mapper resource="com/andaily/infrastructure/mybatis/developer/ProjectMapper.xml"/>
+
+        <mapper resource="com/andaily/infrastructure/mybatis/developer/TeamMapper.xml"/>
+        <mapper resource="com/andaily/infrastructure/mybatis/developer/CommonsMapper.xml"/>
+
+        <mapper resource="com/andaily/infrastructure/mybatis/developer/LogMapper.xml"/>
+        <mapper resource="com/andaily/infrastructure/mybatis/SystemMapper.xml"/>
+    </mappers>
+
+</configuration>

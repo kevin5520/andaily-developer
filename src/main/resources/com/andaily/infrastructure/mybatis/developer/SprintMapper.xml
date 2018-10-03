@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.infrastructure.mybatis.developer.SprintRepositoryMyBatis">
+
+    <resultMap type="Sprint" id="sprintMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="name" column="name_"/>
+        <result property="startDate" column="start_date"/>
+        <result property="deadline" column="deadline"/>
+        <result property="description" column="description"/>
+
+        <result property="status" column="status"/>
+        <result property="pendingTime" column="pending_time"/>
+        <result property="finishTime" column="finish_time"/>
+        <result property="archiveTime" column="archive_time"/>
+
+        <result property="defaultSprint" column="default_sprint"/>
+
+        <association property="archiveUser" column="archive_user_id"
+                     select="com.andaily.infrastructure.mybatis.user.UserRepositoryMyBatis.findUserById"/>
+        <association property="executeTeam" column="execute_team_id"
+                     select="com.andaily.infrastructure.mybatis.developer.TeamRepositoryMyBatis.findTeamById"/>
+
+        <association property="creator" column="creator_id"
+                     select="com.andaily.infrastructure.mybatis.user.UserRepositoryMyBatis.findUserById"/>
+        <association property="project" column="project_id"
+                     select="com.andaily.infrastructure.mybatis.developer.ProjectRepositoryMyBatis.findProjectById"/>
+
+        <collection property="backlogs" column="id"
+                    select="com.andaily.infrastructure.mybatis.developer.BacklogRepositoryMyBatis.findBacklogBySprintId"
+                    ofType="Backlog"/>
+        <collection property="tasks" column="id" select="findTaskBySprintId" ofType="SprintTask"/>
+        <collection property="meetings" column="id" select="findMeetingBySprintId" ofType="SprintMeeting"/>
+    </resultMap>
+
+    <!--Only include commons fields-->
+    <resultMap type="Sprint" id="sprintSimpleMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="name" column="name_"/>
+        <result property="startDate" column="start_date"/>
+        <result property="deadline" column="deadline"/>
+        <result property="description" column="description"/>
+
+        <result property="status" column="status"/>
+        <result property="pendingTime" column="pending_time"/>
+        <result property="finishTime" column="finish_time"/>
+        <result property="archiveTime" column="archive_time"/>
+
+        <result property="defaultSprint" column="default_sprint"/>
+
+        <association property="project" column="project_id"
+                     select="com.andaily.infrastructure.mybatis.developer.ProjectRepositoryMyBatis.findProjectById"/>
+    </resultMap>
+
+    <resultMap type="SprintTask" id="sprintTaskMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="name" column="name_"/>
+        <result property="estimateTime" column="estimate_time"/>
+        <result property="actualUsedTime" column="actual_used_time"/>
+        <result property="number" column="number_"/>
+
+        <result property="status" column="status"/>
+        <result property="pendingTime" column="pending_time"/>
+        <result property="executor" column="executor_id"/>
+
+        <result property="finishTime" column="finish_time"/>
+        <result property="cancelTime" column="cancel_time"/>
+        <result property="finishComment" column="finish_comment"/>
+        <result property="largerMaxTime" column="larger_max_time"/>
+
+        <result property="priority" column="priority"/>
+        <result property="urgent" column="urgent"/>
+        <result property="description" column="description"/>
+
+        <association property="sprint" column="sprint_id" select="findSprintById"/>
+        <association property="creator" column="creator_id"
+                     select="com.andaily.infrastructure.mybatis.user.UserRepositoryMyBatis.findUserById"/>
+        <association property="cancelUser" column="cancel_user_id"
+                     select="com.andaily.infrastructure.mybatis.user.UserRepositoryMyBatis.findUserById"/>
+
+        <association property="backlog" column="backlog_id"
+                     select="com.andaily.infrastructure.mybatis.developer.BacklogRepositoryMyBatis.findBacklogById"/>
+        <association property="executor" column="executor_id"
+                     select="com.andaily.infrastructure.mybatis.user.UserRepositoryMyBatis.findUserById"/>
+    </resultMap>
+
+    <resultMap type="SprintMeeting" id="sprintMeetingMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="meetingDate" column="meeting_date"/>
+        <result property="content" column="content"/>
+        <result property="type" column="type_"/>
+
+        <association property="sprint" column="sprint_id" select="findSprintById"/>
+        <collection property="joinDevelopers" column="id" select="findDeveloperByMeetingId"
+                    ofType="SprintMeetingDeveloper"/>
+    </resultMap>
+
+    <resultMap type="SprintMeetingDeveloper" id="sprintMeetingDeveloperMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <association property="meeting" column="meeting_id" select="findSprintMeetingById"/>
+        <association property="developer" column="developer_id"
+                     select="com.andaily.infrastructure.mybatis.user.DeveloperRepositoryMyBatis.findDeveloperById"/>
+    </resultMap>
+
+    <!--SprintTaskComment-->
+    <resultMap type="SprintTaskComment" id="sprintTaskCommentMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="content" column="content"/>
+        <association property="task" column="task_id" select="findTaskById"/>
+        <association property="who" column="who_id"
+                     select="com.andaily.infrastructure.mybatis.user.DeveloperRepositoryMyBatis.findDeveloperById"/>
+    </resultMap>
+
+    <!--data map-->
+    <resultMap type="SprintTaskTimeData" id="sprintTaskTimeDataMap">
+        <result property="guid" column="guid"/>
+        <result property="estimateTime" column="estimate_time"/>
+        <result property="actualUsedTime" column="actual_used_time"/>
+    </resultMap>
+
+
+    <select id="findByGuid" parameterType="String" resultMap="sprintMap">
+         select a.* from sprint a where a.guid = #{guid}
+         and a.archived = 0
+	</select>
+
+    <select id="lastFinishedTaskTimeBySprint" parameterType="Sprint" resultType="java.util.Date">
+         select t.finish_time from sprint_task t where t.archived = 0
+         and t.status = 'FINISHED' and t.sprint_id = #{id}
+         order by t.finish_time desc limit 1
+	</select>
+
+    <select id="totalSprintTasksOfBacklog" parameterType="Backlog" resultType="int">
+         select count(a.id) from sprint_task a where a.archived = 0
+         and a.backlog_id = #{id}
+	</select>
+
+
+    <select id="findSprintTaskCommentByGuid" parameterType="String" resultMap="sprintTaskCommentMap">
+         select a.* from sprint_task_comment a
+         where a.guid = #{guid}
+         and a.archived = 0
+	</select>
+
+
+    <select id="findProjectSimpleSprints" resultMap="sprintSimpleMap">
+        select a.* from sprint a, project p
+        where a.project_id = p.id
+        and a.archived = 0
+        and p.guid = #{projectGuid}
+        and a.status in
+        <foreach item="item" index="index" collection="statuses" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="countSprintTaskMoveRecords" parameterType="SprintTask" resultType="int">
+         select count(a.id) from sprint_task_move_record a
+         where a.task_id = #{id}
+         and a.archived = 0
+	</select>
+
+    <select id="findExcludeGuidAndStatusSprints" resultMap="sprintMap">
+        select a.* from sprint a, project p
+        where a.guid != #{excludeGuid}
+        and a.archived = 0
+        and a.project_id = p.id
+        and p.guid = #{projectGuid}
+        and a.status in
+        <foreach item="item" index="index" collection="statuses" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findLatestMeetings" resultMap="sprintMeetingMap">
+         select t.* from sprint_meeting t, sprint a
+         where a.guid = #{sprintGuid}
+         and a.archived = 0
+         and a.id = t.sprint_id
+         order by meeting_date desc
+         limit #{size}
+	</select>
+
+    <select id="sumDeveloperEstimateTime" resultType="int">
+        select coalesce(sum(t.estimate_time), 0) from sprint_task t, user_ u
+        where t.archived = 0
+        and u.id = t.executor_id
+        and t.status = 'FINISHED'
+        and date_format(t.finish_time,'%Y-%m-%d') = #{dateAsText}
+        and u.guid = #{developerGuid}
+	</select>
+
+    <select id="sumDeveloperTaskTimes" resultMap="sprintTaskTimeDataMap">
+        select coalesce(sum(t.estimate_time), 0) as estimate_time, coalesce(sum(t.actual_used_time), 0) as actual_used_time, t.guid
+        from sprint_task t, user_ u
+        where t.archived = 0
+        and u.id = t.executor_id
+        and t.status = 'FINISHED'
+        and t.sprint_id = #{sprint.id}
+        and date_format(t.finish_time,'%Y-%m-%d') = #{dateAsText}
+        and u.guid = #{developerGuid}
+	</select>
+
+    <select id="findSprintLastTaskTime" parameterType="Sprint" resultType="java.util.Date">
+         select t.finish_time from sprint_task t
+         where t.sprint_id = #{id}
+         and t.status = 'FINISHED'
+         and t.archived = 0
+         order by t.finish_time desc
+         limit 1
+	</select>
+
+    <select id="findSpecifyDayFinishedTaskTimes" resultType="int">
+         select IFNULL(sum(t.actual_used_time), 0)
+         from sprint_task t
+         where t.sprint_id = #{sprint.id}
+         and t.status = 'FINISHED'
+         and t.archived = 0
+         and date_format(t.finish_time, '%Y-%m-%d') = date_format(#{date}, '%Y-%m-%d')
+	</select>
+
+    <select id="findMeetingByGuid" parameterType="String" resultMap="sprintMeetingMap">
+         select a.* from sprint_meeting a where a.guid = #{guid}
+         and a.archived = 0
+	</select>
+
+    <select id="findDeveloperByMeetingId" parameterType="int" resultMap="sprintMeetingDeveloperMap">
+         select a.* from sprint_meeting_developer a where a.meeting_id = #{meetingId}
+	</select>
+
+    <select id="findSprintMeetingById" parameterType="int" resultMap="sprintMeetingMap">
+         select a.* from sprint_meeting a where a.id = #{id}
+	</select>
+
+    <select id="findSprintByProjectId" parameterType="int" resultMap="sprintMap">
+         select a.* from sprint a
+         where a.project_id = #{id}
+         and a.archived = 0
+	</select>
+
+    <select id="totalTasksBySprintAndStatus" resultType="int">
+         select count(t.id) from sprint_task t
+         where t.status = #{status}
+         and t.sprint_id = (
+         select id from sprint where guid = #{sprintGuid}
+         )
+         and t.archived = 0
+	</select>
+
+    <select id="findSprintName" parameterType="String" resultType="String">
+         select a.name_ from sprint a where a.guid = #{guid}
+	</select>
+
+    <select id="findByName" parameterType="String" resultMap="sprintMap">
+         select a.* from sprint a where a.name_ = #{name}
+         and a.archived = 0
+	</select>
+
+    <select id="findSprints" parameterType="Boolean" resultMap="sprintMap">
+         select a.* from sprint a where  a.archived = #{archived}
+         order by a.create_time desc
+	</select>
+
+    <select id="findAvailableSprints" parameterType="map" resultMap="sprintMap">
+        select s.* from sprint s, project p
+        where s.archived = 0
+        and s.project_id = p.id
+        and p.archived = 0
+        <if test="status != null">
+            and s.status = #{status}
+        </if>
+        <if test="projectGuid != null">
+            and p.guid = #{projectGuid}
+        </if>
+        <if test="isProductOwner != null">
+            and p.id in (
+            select project_id from project_product_owner
+            where product_owner_id = #{currUser.id}
+            )
+        </if>
+        <if test="isTeamMember != null">
+            and s.execute_team_id = #{currUser.team.id}
+        </if>
+        order by s.create_time desc
+    </select>
+
+    <select id="findTaskByGuid" parameterType="String" resultMap="sprintTaskMap">
+         select a.* from sprint_task a where a.guid = #{guid}
+         and a.archived = 0
+	</select>
+
+    <select id="findOverviewSprints" parameterType="map" resultMap="sprintMap">
+        select s.* from sprint s, project p
+        where s.archived = 0
+        and s.project_id = p.id
+        and p.archived = 0
+        <if test="status != null">
+            and s.status = #{status}
+        </if>
+        <if test="projectGuid != null">
+            and p.guid = #{projectGuid}
+        </if>
+        <if test="isProductOwner != null">
+            and p.id in (
+            select project_id from project_product_owner
+            where product_owner_id = #{currUser.id}
+            )
+        </if>
+        <if test="isTeamMember != null">
+            and s.execute_team_id = #{currUser.team.id}
+        </if>
+        order by s.status desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalOverviewSprints" parameterType="map" resultType="int">
+        select count(s.id) from sprint s, project p
+        where s.archived = 0
+        and s.project_id = p.id
+        and p.archived = 0
+        <if test="status != null">
+            and s.status = #{status}
+        </if>
+        <if test="projectGuid != null">
+            and p.guid = #{projectGuid}
+        </if>
+        <if test="isProductOwner != null">
+            and p.id in (
+            select project_id from project_product_owner
+            where product_owner_id = #{currUser.id}
+            )
+        </if>
+        <if test="isTeamMember != null">
+            and s.execute_team_id = #{currUser.team.id}
+        </if>
+    </select>
+
+
+    <select id="findMeetings" parameterType="map" resultMap="sprintMeetingMap">
+        select m.* from sprint_meeting m, sprint s
+        where s.archived = 0
+        and m.sprint_id = s.id
+        and m.archived = 0
+        and s.guid = #{sprintGuid}
+        <if test="type != null">
+            and m.type_ = #{type}
+        </if>
+        order by m.meeting_date desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalMeetings" parameterType="map" resultType="int">
+        select count(m.id) from sprint_meeting m, sprint s
+        where s.archived = 0
+        and m.sprint_id = s.id
+        and m.archived = 0
+        and s.guid = #{sprintGuid}
+        <if test="type != null">
+            and m.type_ = #{type}
+        </if>
+    </select>
+
+
+    <select id="findSprintTasks" parameterType="map" resultMap="sprintTaskMap">
+        select a.* from sprint_task a, sprint s, project p
+        where a.sprint_id = s.id
+        and s.project_id = p.id
+        and a.archived = 0
+        and s.archived = 0
+        and s.guid = #{sprintGuid}
+        <if test="status != null">
+            and a.status = #{status}
+        </if>
+        <if test="number != null">
+            and a.number_ = #{number}
+        </if>
+        <if test="onlyShowMyTasks">
+            and a.executor_id = #{currUser.id}
+        </if>
+        <if test="isProductOwner != null">
+            and p.id in (
+            select project_id from project_product_owner
+            where product_owner_id = #{currUser.id}
+            )
+        </if>
+        <if test="isTeamMember != null">
+            and s.execute_team_id = #{currUser.team.id}
+        </if>
+        order by ${orderBy} desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalSprintTasks" parameterType="map" resultType="int">
+        select count(a.id) from sprint_task a, sprint s, project p
+        where a.sprint_id = s.id
+        and s.project_id = p.id
+        and a.archived = 0
+        and s.archived = 0
+        and s.guid = #{sprintGuid}
+        <if test="status != null">
+            and a.status = #{status}
+        </if>
+        <if test="number != null">
+            and a.number_ = #{number}
+        </if>
+        <if test="onlyShowMyTasks">
+            and a.executor_id = #{currUser.id}
+        </if>
+        <if test="isProductOwner != null">
+            and p.id in (
+            select project_id from project_product_owner
+            where product_owner_id = #{currUser.id}
+            )
+        </if>
+        <if test="isTeamMember != null">
+            and s.execute_team_id = #{currUser.team.id}
+        </if>
+    </select>
+
+    <select id="findTaskById" parameterType="int" resultMap="sprintTaskMap">
+         select a.* from sprint_task a where a.id = #{id}
+         and a.archived = 0
+	</select>
+
+    <select id="findSprintById" parameterType="int" resultMap="sprintMap">
+         select a.* from sprint a where a.id = #{id}
+         and a.archived = 0
+	</select>
+
+    <select id="findTaskBySprintId" parameterType="int" resultMap="sprintTaskMap">
+         select a.* from sprint_task a where a.sprint_id = #{sprintId}
+         and a.archived = 0
+	</select>
+
+    <select id="findMeetingBySprintId" parameterType="int" resultMap="sprintMeetingMap">
+         select a.* from sprint_meeting a where a.sprint_id = #{sprintId}
+         and a.archived = 0
+	</select>
+
+    <select id="findMeetingById" parameterType="int" resultMap="sprintMeetingMap">
+         select a.* from sprint_meeting a where a.id = #{id}
+         and a.archived = 0
+	</select>
+
+    <select id="findCommentsByTaskGuid" parameterType="String" resultMap="sprintTaskCommentMap">
+         select a.* from sprint_task_comment a, sprint_task t
+         where a.task_id = t.id
+         and a.archived = 0
+         and t.guid = #{taskGuid}
+	</select>
+
+
+    <select id="totalSprintMeetings" resultType="int">
+         select count(a.id) from sprint_meeting a, sprint s
+         where a.sprint_id = s.id
+         and a.archived = 0
+         and s.guid = #{sprintGuid}
+         and a.type_ = #{type}
+	</select>
+
+    <insert id="saveSprint" parameterType="Sprint" useGeneratedKeys="true" keyProperty="id">
+        insert into sprint(
+        guid, create_time, archived, creator_id, name_, start_date, deadline,
+        status, pending_time, finish_time, archive_time, archive_user_id,
+        description, project_id, default_sprint,execute_team_id)
+        values (
+        #{guid}, #{createTime}, #{archived}, #{creator.id}, #{name}, #{startDate}, #{deadline},
+        #{status}, #{pendingTime}, #{finishTime}, #{archiveTime}, #{archiveUser.id},
+        #{description}, #{project.id}, #{defaultSprint},#{executeTeam.id})
+    </insert>
+
+    <insert id="saveSprintMeeting" parameterType="SprintMeeting" useGeneratedKeys="true" keyProperty="id">
+        insert into sprint_meeting(
+        guid, create_time, archived, meeting_date, type_, content, sprint_id)
+        values (
+        #{guid}, #{createTime}, #{archived}, #{meetingDate}, #{type}, #{content}, #{sprint.id})
+    </insert>
+
+    <insert id="saveSprintMeetingDeveloper" parameterType="SprintMeetingDeveloper" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into sprint_meeting_developer(
+        guid, create_time, archived, meeting_id, developer_id)
+        values (
+        #{guid}, #{createTime}, #{archived}, #{meeting.id}, #{developer.id})
+    </insert>
+
+    <insert id="saveSprintTaskMoveRecord" parameterType="SprintTaskMoveRecord" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into sprint_task_move_record(
+        guid, create_time, archived, from_sprint_id, to_sprint_id, task_id)
+        values (
+        #{guid}, #{createTime}, #{archived}, #{fromSprint.id}, #{toSprint.id}, #{task.id})
+    </insert>
+
+    <insert id="saveSprintTaskComment" parameterType="SprintTaskComment" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into sprint_task_comment(
+        guid, create_time, archived, who_id, content, task_id)
+        values (
+        #{guid}, #{createTime}, #{archived}, #{who.id}, #{content}, #{task.id})
+    </insert>
+
+    <insert id="saveSprintTask" parameterType="SprintTask" useGeneratedKeys="true" keyProperty="id">
+        insert into sprint_task(
+        guid, create_time, archived, creator_id, name_, estimate_time, actual_used_time,
+        sprint_id, status, pending_time, executor_id, finish_time, cancel_time,
+        cancel_user_id, priority, urgent, backlog_id, description,
+        larger_max_time, finish_comment,number_)
+        values (
+        #{guid}, #{createTime}, #{archived}, #{creator.id}, #{name}, #{estimateTime}, #{actualUsedTime},
+        #{sprint.id}, #{status}, #{pendingTime}, #{executor.id}, #{finishTime}, #{cancelTime},
+        #{cancelUser.id}, #{priority}, #{urgent}, #{backlog.id}, #{description},
+        #{largerMaxTime}, #{finishComment}, #{number})
+    </insert>
+
+    <update id="updateSprint" parameterType="Sprint" flushCache="true">
+        update sprint set
+        archived = #{archived},
+        name_ = #{name},
+        start_date = #{startDate},
+        deadline = #{deadline},
+        status = #{status},
+        pending_time = #{pendingTime},
+        finish_time = #{finishTime},
+        description = #{description},
+        default_sprint = #{defaultSprint},
+        archive_user_id = #{archiveUser.id},
+        execute_team_id = #{executeTeam.id},
+        archive_time = #{archiveTime}
+        where guid = #{guid}
+    </update>
+
+    <update id="updateSprintTask" parameterType="SprintTask" flushCache="true">
+        update sprint_task set
+        archived = #{archived},
+        name_ = #{name},
+        estimate_time = #{estimateTime},
+        actual_used_time = #{actualUsedTime},
+        sprint_id = #{sprint.id},
+        status = #{status},
+        pending_time = #{pendingTime},
+        executor_id = #{executor.id},
+        finish_time = #{finishTime},
+        cancel_time = #{cancelTime},
+        cancel_user_id = #{cancelUser.id},
+        priority = #{priority},
+        urgent = #{urgent},
+        description = #{description},
+        finish_comment = #{finishComment},
+        larger_max_time = #{largerMaxTime},
+        backlog_id = #{backlog.id}
+        where guid = #{guid}
+    </update>
+
+    <update id="updateTaskStatus" flushCache="true">
+        update sprint_task set
+        status = #{status}
+        where guid = #{guid}
+    </update>
+
+    <update id="updateSprintTaskExecutor" flushCache="true">
+        update sprint_task set
+        executor_id = #{executor.id}
+        where guid = #{guid}
+    </update>
+
+    <update id="updateProjectSprintsNoDefault" parameterType="Project" flushCache="true">
+        update sprint set
+        default_sprint = 0
+        where project_id = #{id}
+        and archived = 0
+    </update>
+
+    <update id="updateSprintMeeting" flushCache="true">
+        update sprint_meeting set
+        archived = #{archived},
+        meeting_date = #{meetingDate},
+        type_ = #{type},
+        content = #{content}
+        where guid = #{guid}
+    </update>
+
+
+    <delete id="deleteSprintTaskComment" parameterType="SprintTaskComment" flushCache="true">
+        delete from sprint_task_comment
+        where guid = #{guid}
+    </delete>
+
+
+</mapper>

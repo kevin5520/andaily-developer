@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+
+    <!--Mail configuration-->
+    <bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${host.name}"/>
+        <property name="port" value="${mail.smtp.port}"/>
+        <property name="username" value="${mail.username}"/>
+        <property name="password" value="${mail.password}"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+                <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean class="com.andaily.infrastructure.mail.SendMailHandler">
+        <property name="defaultAddress" value="${default.mail.address}"/>
+        <property name="developEmailAddress" value="${mail.develop.address}"/>
+        <property name="developEnvironment" value="${mail.develop.environment}"/>
+        <property name="mailSender" ref="javaMailSender"/>
+    </bean>
+
+    <bean id="mailSender" class="com.andaily.infrastructure.mail.AndailyMailSenderImpl">
+        <property name="sendMailUseThread" value="${mail.send.use.thread}"/>
+        <property name="logoInlineResource" value="classpath:imgs/andaily.png"/>
+    </bean>
+
+
+    <!--File warehouse -->
+    <bean id="fileWarehouse" class="com.andaily.infrastructure.file.DiskFileWarehouse">
+        <property name="diskRootPath" value="${disk.root.path}"/>
+    </bean>
+
+    <!-- i18n message source configuration -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>/WEB-INF/classes/ad</value>
+            </list>
+        </property>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <!--<property name="useCodeAsDefaultMessage" value="true"/>-->
+    </bean>
+
+    <bean class="com.andaily.infrastructure.support.MessageUtils">
+        <property name="messageSource" ref="messageSource"/>
+    </bean>
+
+
+</beans>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="Description" content="andaily mobile"/>
+    <meta name="Keywords" content="andaily,and daily,daily management,andaily mobile"/>
+
+    <title>$title$</title>
+
+    <style type="text/css">
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: #0088cc;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        img {
+            border: none;
+        }
+
+        body {
+            font: 75% "微软雅黑", helvetica, Arial;
+            min-height: 100%;
+            line-height: 1.5;
+            color: #333333;
+        }
+
+        .page {
+            width: 80%;
+            margin: 30px auto;
+            padding: 30px;
+            background: #fff;
+            box-shadow: 1px 1px 7px 1px #999;
+            border-radius: 5px;
+        }
+
+            /*footer*/
+        .footer {
+            margin-top: 40px;
+        }
+
+        .footer .auto-info {
+            color: #d3d3d3;
+            font-size: 10px;
+        }
+
+            /*content*/
+        .content {
+            margin-top: 30px;
+        }
+
+            /*head*/
+        .head {
+            float: right;
+        }
+
+        .head  .logo {
+            width: 125px;
+            height: 75px;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="page">
+    <div class="head">
+        <a href="http://www.andaily.com" target="_blank">
+            <img src="cid:andaily_logo" alt="Andaily logo" title="Andaily" class="logo"/>
+        </a>
+    </div>
+    <div class="content">
+        <p>亲爱的用户:</p>
+
+        <p>
+            感谢你对 Andaily的支持!
+        </p>
+
+        <p>
+            你已经成功注册了Andaily的帐号: <strong>$email$</strong>
+        </p>
+
+        <p>
+            请点击下面的链接激活你的帐号:
+            <br/>
+            <br/>
+            <a href="$validateUrl$">$validateUrl$</a>
+        </p>
+
+    </div>
+    <div class="footer">
+        <div class="auto-info">
+            这是一封由系统自动生成并发送的邮件, 请勿回复.
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,99 @@
+/**
+Developer css definition
+*/
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.footer {
+    color: #d3d3d3;
+}
+
+.width100 {
+    width: 100%;
+}
+
+.width60 {
+    width: 60%;
+}
+
+.width50 {
+    width: 50%;
+}
+
+.width40 {
+    width: 40%;
+}
+
+.width30 {
+    width: 30%;
+}
+
+.width25 {
+    width: 25%;
+}
+
+.width5 {
+    width: 5%;
+}
+
+.sprint-form {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.sprint-form table {
+    width: 100%;
+}
+
+.sprint-task-form {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.backlog-form {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+label {
+    color: #3a87ad;
+}
+
+.help-block {
+    color: #d3d3d3;
+}
+
+.red {
+    color: red;
+}
+
+.blue {
+    color: #0000ff;
+}
+
+.sprint-backlog-budget {
+    margin-top: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.developer-time-budget {
+    margin-top: -55px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.sprint-backlog-budget strong, .developer-time-budget strong {
+    color: #ffff00;
+}
+
+.project-form {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.project-form table {
+    width: 100%;
+}

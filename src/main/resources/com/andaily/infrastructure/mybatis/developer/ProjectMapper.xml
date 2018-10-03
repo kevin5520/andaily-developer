@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.infrastructure.mybatis.developer.ProjectRepositoryMyBatis">
+
+    <resultMap type="Project" id="projectMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="name" column="name_"/>
+        <result property="code" column="code"/>
+        <result property="description" column="description"/>
+        <result property="finishDate" column="finish_date"/>
+
+        <association property="creator" column="creator_id"
+                     select="com.andaily.infrastructure.mybatis.user.UserRepositoryMyBatis.findUserById"/>
+
+        <collection property="sprints" column="id"
+                    select="com.andaily.infrastructure.mybatis.developer.SprintRepositoryMyBatis.findSprintByProjectId"
+                    ofType="Sprint"/>
+        <collection property="backlogs" column="id"
+                    select="com.andaily.infrastructure.mybatis.developer.BacklogRepositoryMyBatis.findBacklogByProjectId"
+                    ofType="Backlog"/>
+        <collection property="productOwners" column="id" select="findProjectProductOwnerByProjectId"
+                    ofType="ProjectProductOwner"/>
+
+        <collection property="teams" column="id"
+                    select="com.andaily.infrastructure.mybatis.developer.TeamRepositoryMyBatis.findTeamProjectByProjectId"
+                    ofType="TeamProject"/>
+    </resultMap>
+
+
+    <resultMap type="Project" id="projectSimpleMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="name" column="name_"/>
+        <result property="code" column="code"/>
+        <result property="description" column="description"/>
+        <result property="finishDate" column="finish_date"/>
+
+    </resultMap>
+
+    <resultMap type="ProjectProductOwner" id="projectProductOwnerMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <association property="project" column="project_id" select="findProjectById"/>
+        <association property="productOwner" column="product_owner_id"
+                     select="com.andaily.infrastructure.mybatis.user.DeveloperRepositoryMyBatis.findDeveloperById"/>
+
+    </resultMap>
+
+
+    <resultMap type="SimpleProjectData" id="simpleProjectDataMap">
+        <result property="guid" column="guid"/>
+        <result property="name" column="name_"/>
+        <result property="code" column="code"/>
+    </resultMap>
+
+
+    <select id="findByGuid" parameterType="String" resultMap="projectMap">
+         select a.* from project a
+         where a.guid = #{guid}
+	</select>
+
+    <select id="findByGuids" resultMap="projectMap">
+        select a.* from project a
+        where a.guid in
+        <foreach item="item" index="index" collection="guids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findAllSimpleProjects" resultMap="simpleProjectDataMap">
+         select a.guid, a.name_, a.code from project a
+         where a.archived = 0
+	</select>
+
+    <select id="findSimpleProjectsByTeam" parameterType="Team" resultMap="simpleProjectDataMap">
+         select a.guid, a.name_, a.code
+         from project a,team_project tp
+         where a.archived = 0
+         and a.id = tp.project_id
+         and tp.team_id = #{id}
+	</select>
+
+    <select id="findSimpleProjectsByDeveloper" parameterType="Developer" resultMap="simpleProjectDataMap">
+         select a.guid, a.name_, a.code
+         from project a,project_product_owner tp
+         where a.archived = 0
+         and a.id = tp.project_id
+         and tp.product_owner_id = #{id}
+	</select>
+
+    <select id="findSimpleProject" parameterType="String" resultMap="simpleProjectDataMap">
+         select a.guid, a.name_, a.code from project a
+         where a.guid = #{projectGuid}
+	</select>
+
+    <select id="findAvailableSimpleProjects" parameterType="map" resultMap="simpleProjectDataMap">
+        select a.guid, a.name_, a.code from project a
+        where a.archived = 0
+        <if test="isProductOwner != null">
+            and a.id in (
+            select project_id from project_product_owner
+            where product_owner_id = #{currUser.id}
+            )
+        </if>
+        <if test="isTeamMember != null">
+            and a.id in (
+            select project_id from team_project
+            where team_id = #{currUser.team.id}
+            )
+        </if>
+    </select>
+
+    <select id="findProjectById" parameterType="int" resultMap="projectMap">
+         select a.* from project a where a.id = #{id}
+	</select>
+
+    <select id="findSimpleProjectById" parameterType="int" resultMap="projectSimpleMap">
+         select a.* from project a where a.id = #{id}
+	</select>
+
+    <select id="totalTasksOfProject" parameterType="Project" resultType="int" useCache="false">
+         select count(t.id) from sprint_task t,sprint s
+         where t.sprint_id = s.id
+         and s.project_id = #{id}
+	</select>
+
+    <select id="maxTaskNumberOfProject" parameterType="Project" resultType="int" useCache="false">
+         select coalesce(max(t.number_),0) from sprint_task t,sprint s
+         where t.sprint_id = s.id
+         and s.project_id = #{id}
+	</select>
+
+    <select id="findProjectProductOwnerByProjectId" parameterType="int" resultMap="projectProductOwnerMap">
+         select a.* from project_product_owner a
+         where a.project_id = #{projectId}
+	</select>
+
+    <select id="findOverviewProjects" parameterType="map" resultMap="projectMap">
+        select s.* from project s
+        where s.archived = 0
+        <if test="name != null">
+            and s.name_ like #{name}
+        </if>
+        <if test="teamGuid != null">
+            and s.id in (
+            select project_id from team_project where team_id = (
+            select id from team where guid = #{teamGuid}
+            )
+            )
+        </if>
+        <if test="productOwnerGuid != null">
+            and s.id in (
+            select ppo.project_id from project_product_owner ppo, user_ us
+            where us.id = ppo.product_owner_id
+            and us.guid = #{productOwnerGuid}
+            )
+        </if>
+        order by s.create_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalOverviewProjects" parameterType="map" resultType="int">
+        select count(s.id) from project s
+        where s.archived = 0
+        <if test="name != null">
+            and s.name_ like #{name}
+        </if>
+        <if test="teamGuid != null">
+            and s.id in (
+            select project_id from team_project where team_id = (
+            select id from team where guid = #{teamGuid}
+            )
+            )
+        </if>
+        <if test="productOwnerGuid != null">
+            and s.id in (
+            select ppo.project_id from project_product_owner ppo, user_ us
+            where us.id = ppo.product_owner_id
+            and us.guid = #{productOwnerGuid}
+            )
+        </if>
+    </select>
+
+    <insert id="saveProject" parameterType="Project" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into project(
+        guid, create_time, archived, name_, code, creator_id, description,
+        finish_date)
+        values (
+        #{guid}, #{createTime}, #{archived}, #{name}, #{code}, #{creator.id}, #{description},
+        #{finishDate})
+    </insert>
+
+    <insert id="saveProjectProductOwner" parameterType="ProjectProductOwner" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into project_product_owner(
+        guid, create_time, archived, project_id, product_owner_id)
+        values (
+        #{guid}, #{createTime}, #{archived}, #{project.id}, #{productOwner.id})
+    </insert>
+
+    <update id="updateProject" flushCache="true">
+        update project set
+        archived = #{archived},
+        name_ = #{name},
+        code = #{code},
+        finish_date = #{finishDate},
+        description = #{description}
+        where guid = #{guid}
+    </update>
+
+    <update id="archiveProject" flushCache="true">
+        update project set
+        archived = #{archived}
+        where guid = #{guid}
+    </update>
+
+    <delete id="deleteProjectProductOwners" flushCache="true">
+        delete from project_product_owner
+        where guid in
+        <foreach item="item" index="index" collection="productOwners" open="(" separator="," close=")">
+            #{item.guid}
+        </foreach>
+    </delete>
+
+</mapper>

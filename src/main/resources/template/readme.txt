@@ -1,0 +1,1 @@
+All StringTemplate(ST) files in the folder.

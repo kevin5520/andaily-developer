@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.infrastructure.mybatis.user.DeveloperRepositoryMyBatis">
+
+    <resultMap type="Developer" id="developerMap"
+               extends="com.andaily.infrastructure.mybatis.user.UserRepositoryMyBatis.userMap">
+        <result property="scrumTerm" column="scrum_term"/>
+        <result property="language" column="language_"/>
+
+        <association property="team" column="team_id"
+                     select="com.andaily.infrastructure.mybatis.developer.TeamRepositoryMyBatis.findTeamById"/>
+    </resultMap>
+
+    <select id="findByGuid" parameterType="String" resultMap="developerMap">
+         select u.*
+         from user_ u
+         where  u.guid = #{guid}
+         and u.type_ = 'Developer'
+	</select>
+
+    <select id="findAllProductOwners" resultMap="developerMap">
+         select u.*
+         from user_ u
+         where  u.scrum_term = 'PRODUCT_OWNER'
+         and u.type_ = 'Developer'
+         and u.archived = 0
+	</select>
+
+    <select id="findEmptyDevelopers" resultMap="developerMap">
+        select u.*
+        from user_ u
+        where u.archived = 0
+        and u.type_ = 'Developer'
+        and u.scrum_term in
+        <foreach item="item" index="index" collection="terms" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and u.team_id is null
+    </select>
+
+    <select id="findDeveloperByGuids" resultMap="developerMap">
+        select u.* from user_ u where u.guid in
+        <foreach item="item" index="index" collection="guids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and u.type_ = 'Developer'
+    </select>
+
+    <select id="findDeveloperById" parameterType="Integer" resultMap="developerMap">
+         select u.*
+         from user_ u
+         where u.id = #{id}
+         and u.type_ = 'Developer'
+	</select>
+
+    <select id="findDeveloperByTeamId" parameterType="Integer" resultMap="developerMap">
+         select u.*
+         from user_ u
+         where u.team_id = #{teamId}
+         and u.type_ = 'Developer'
+	</select>
+
+    <insert id="saveDeveloper" parameterType="Developer" useGeneratedKeys="true" keyProperty="id">
+        insert into user_
+        (guid,archived,create_time,email,password,city,nick_name,cell_phone,
+        verify_code, scrum_term, type_, team_id,language_,description)
+        values
+        (#{guid},#{archived},#{createTime},#{email},#{password},#{city}, #{nickName},#{cellPhone},
+        #{verifyCode}, #{scrumTerm}, 'Developer', #{team.id}, #{language},#{description})
+    </insert>
+
+    <update id="updateDeveloper" parameterType="Developer" flushCache="true">
+        update user_ u
+        set u.scrum_term = #{scrumTerm},
+        u.team_id = #{team.id},
+        u.city = #{city},
+        u.nick_name = #{nickName},
+        u.cell_phone = #{cellPhone},
+        u.language_ = #{language},
+        u.email = #{email},
+        u.description = #{description},
+        u.archived = #{archived}
+        where u.guid = #{guid}
+        and u.type_ = 'Developer'
+    </update>
+
+    <update id="cleanDevelopersTeam" flushCache="true">
+        update user_ u
+        set u.team_id = null
+        where u.guid in
+        <foreach item="item" index="index" collection="developers" open="(" separator="," close=")">
+            #{item.guid}
+        </foreach>
+        and u.type_ = 'Developer'
+    </update>
+
+    <update id="updateDevelopersTeam" flushCache="true">
+        update user_ u
+        set u.team_id = #{team.id}
+        where u.guid in
+        <foreach item="item" index="index" collection="guids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and u.type_ = 'Developer'
+    </update>
+
+</mapper>

@@ -1,0 +1,15 @@
+<div>
+    状态: <span class='text-info'>$status$</span><br/>
+    估算时间: <span class='text-info'>$estimateTimesAsHour$</span><br/>
+    已使用时间: <span class='text-info'>$usedTimesAsHour$ $timeDifferenceAsHtml$</span><br/>
+
+    创建时间: <span class='text-info'>$createTime$</span><br/>
+    创建人: <span class='text-info'>$creator$</span><br/>
+    开始日期: <span class='text-info'>$startDate$</span><br/>
+    死亡日: <span class='text-info'>$deadline$</span>
+    $if(showCurrDeadline)$(<span class='text-warning'>$currDeadline$</span>)$endif$<br/>
+    开发团队: <span class='text-info'>$team$</span><br/>
+
+    <div class='text-info'>$description$</div>
+    <br/>
+</div>

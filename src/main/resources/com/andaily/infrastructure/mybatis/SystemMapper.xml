@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.infrastructure.mybatis.SystemRepositoryMyBatis">
+
+    <resultMap type="SystemConfiguration" id="systemConfigurationMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="perPageSize" column="per_page_size"/>
+    </resultMap>
+
+    <select id="findSystemConfiguration" resultMap="systemConfigurationMap">
+         select u.* from system_configuration u
+	</select>
+
+
+    <update id="updateSystemConfiguration" parameterType="SystemConfiguration" flushCache="true">
+        update system_configuration u
+        set u.per_page_size = #{perPageSize}
+    </update>
+
+</mapper>

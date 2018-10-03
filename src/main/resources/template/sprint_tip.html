@@ -1,0 +1,15 @@
+<div>
+    Status: <span class='text-info'>$status$</span><br/>
+    Estimate time: <span class='text-info'>$estimateTimesAsHour$</span><br/>
+    Used time: <span class='text-info'>$usedTimesAsHour$ $timeDifferenceAsHtml$</span><br/>
+
+    Create time: <span class='text-info'>$createTime$</span><br/>
+    Creator: <span class='text-info'>$creator$</span><br/>
+    Start date: <span class='text-info'>$startDate$</span><br/>
+    Deadline: <span class='text-info'>$deadline$</span>
+    $if(showCurrDeadline)$(<span class='text-warning'>$currDeadline$</span>)$endif$<br/>
+    Team: <span class='text-info'>$team$</span><br/>
+
+    <div class='text-info'>$description$</div>
+    <br/>
+</div>

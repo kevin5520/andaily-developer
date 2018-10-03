@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.infrastructure.mybatis.user.UserRepositoryMyBatis">
+
+    <resultMap type="User" id="userMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="city" column="city"/>
+        <result property="verifyCode" column="verify_code"/>
+
+        <result property="nickName" column="nick_name"/>
+        <result property="cellPhone" column="cell_phone"/>
+        <result property="lastLoginTime" column="last_login_time"/>
+        <result property="description" column="description"/>
+
+        <discriminator column="type_" javaType="String">
+            <case value="Developer"
+                  resultMap="com.andaily.infrastructure.mybatis.user.DeveloperRepositoryMyBatis.developerMap"/>
+        </discriminator>
+    </resultMap>
+
+    <resultMap type="ScrumTermData" id="scrumTermDataMap">
+        <result property="count" column="count_"/>
+        <result property="term" column="term"/>
+    </resultMap>
+
+
+    <select id="findByGuid" parameterType="String" resultType="User" resultMap="userMap">
+         select * from user_ where  guid = #{guid}
+	</select>
+
+    <select id="findScrumTermDatas" parameterType="String" resultMap="scrumTermDataMap">
+         select count(*) as count_, scrum_term as term
+         from user_
+         where archived = 0
+         and scrum_term is not null
+         group by scrum_term
+	</select>
+
+    <select id="findUserByGuids" resultMap="userMap">
+        select * from user_ where guid in
+        <foreach item="item" index="index" collection="guids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findUserById" parameterType="Integer" resultMap="userMap">
+         select * from user_ where id = #{id}
+	</select>
+
+    <select id="findMyPassword" parameterType="String" resultType="String">
+         select password from user_ where archived = 0 and guid = #{guid}
+	</select>
+
+    <select id="findByEmail" parameterType="String" resultType="User" resultMap="userMap">
+         select * from user_ where archived = 0 and email = #{email}
+	</select>
+
+    <select id="findByEmailIncludeArchived" parameterType="String" resultMap="userMap">
+         select * from user_ where email = #{email}
+	</select>
+
+    <select id="findArchivedUser" parameterType="String" resultMap="userMap">
+         select * from user_ where archived = 1 and verify_code = #{code}
+	</select>
+
+    <select id="findUserGuidByEmail" parameterType="String" resultType="String">
+         select guid from user_ where  email = #{email}
+	</select>
+
+    <select id="findUserGuidByCellphone" parameterType="String" resultType="String">
+         select guid from user_ where  cell_phone = #{phone}
+	</select>
+
+    <select id="findOverviewUsers" parameterType="map" resultMap="userMap">
+        select u.* from user_ u
+        where u.archived = #{archived}
+        <if test="email != null">
+            and u.email like #{email}
+        </if>
+        <if test="term != null">
+            and u.scrum_term = #{term}
+        </if>
+        <if test="teamGuid != null">
+            and u.team_id = (
+            select t.id from team t where t.guid = #{teamGuid}
+            )
+        </if>
+        order by u.create_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalOverviewUsers" parameterType="map" resultType="int">
+        select count(u.id) from user_ u
+        where u.archived = #{archived}
+        <if test="email != null">
+            and u.email like #{email}
+        </if>
+        <if test="term != null">
+            and u.scrum_term = #{term}
+        </if>
+        <if test="teamGuid != null">
+            and u.team_id = (
+            select t.id from team t where t.guid = #{teamGuid}
+            )
+        </if>
+    </select>
+
+
+    <insert id="saveUser" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        insert into user_(guid,archived,create_time,email,password,city,
+        nick_name,cell_phone,verify_code,type_,description)
+        values (
+        #{guid},#{archived},#{createTime},#{email},#{password},#{city},
+        #{nickName},#{cellPhone},#{verifyCode},'User',#{description})
+    </insert>
+
+
+    <update id="activeUser" parameterType="String" flushCache="true">
+          update user_ set archived = 0, verify_code = null where guid = #{guid}
+    </update>
+
+    <update id="updatePassword" parameterType="User" flushCache="true">
+          update user_ set password = #{password} where guid = #{guid}
+    </update>
+
+    <update id="updateUser" parameterType="User" flushCache="true">
+        update user_ set city = #{city},
+        nick_name = #{nickName},
+        cell_phone = #{cellPhone},
+        email = #{email},
+        description = #{description},
+        archived = #{archived}
+        where guid = #{guid}
+    </update>
+
+</mapper>

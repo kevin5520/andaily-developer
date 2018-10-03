@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<decorators defaultdir="/WEB-INF/jsp/decorator">
+
+    <!--developer decorator-->
+    <decorator name="developer_main" page="developer_main.jsp">
+        <pattern>/developer</pattern>
+    </decorator>
+
+    <excludes>
+
+        <!--developer excludes-->
+        <pattern>/developer/task_action/finishform/**</pattern>
+        <pattern>/developer/sprint_action/check_start/**</pattern>
+        <pattern>/developer/sprint_action/check_finish/**</pattern>
+        <pattern>/developer/sprint_action/load_backlogs/**</pattern>
+        <pattern>/developer/sprint_action/load_sprint_projects*</pattern>
+
+        <pattern>/developer/task_action/load_backlog/**</pattern>
+        <pattern>/developer/sprint_action/burndown/details/**</pattern>
+        <pattern>/developer/sprint/meeting_form/**</pattern>
+        <pattern>/developer/sprint_meeting/details/**</pattern>
+
+        <pattern>/developer/task_action/load_move/**</pattern>
+        <pattern>/developer/login*</pattern>
+        <pattern>/developer/user_/reset_password/*</pattern>
+        <pattern>/developer/task_action/start_checking/**</pattern>
+        <pattern>/developer/task_action/assign_task_form/**</pattern>
+
+        <pattern>/developer/sprint_action/manage_backlogs/move_sprint_backlog*</pattern>
+        <pattern>/developer/task_action/comment_form/**</pattern>
+        <pattern>/developer/task_action/comment_submit/**</pattern>
+        <pattern>/developer/task_action/comment_delete/**</pattern>
+
+    </excludes>
+
+</decorators>

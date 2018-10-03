@@ -1,0 +1,42 @@
+
+
+2013-10-16--------------
+alter table backlog add `project_id` int(11);
+alter table sprint add `project_id` int(11);
+
+2013-10-19--------------
+alter table project add `finish_date`  date;
+
+2013-11-12--------------
+alter table sprint_task add `finish_comment` varchar(255);
+
+2013-11-13--------------
+alter table sprint_task add `larger_max_time` tinyint(1) default '0';
+
+
+2013-11-16--------------
+alter table sprint add `default_sprint` tinyint(1) default '0';
+
+2013-11-16--------------
+mysqldump -ubuild -pbuild andaily_developer > e:/ad.sql
+
+mysql -hec2-50-19-213-178.compute-1.amazonaws.com -uandaily_d -pandaily_d andaily_developer
+
+alter table user_ add team_id int(11);
+
+2013-11-16--------------
+alter table team add `description`  text;
+
+2014-06-05--------------
+alter table sprint_task add `number_` int(11);
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2014-06-27--------------
+alter table user_ add  `language_` varchar(255) not null default 'ENGLISH';
+
+2015-03-18--------------
+alter table backlog add `number_` int(11) unique default 0;
+alter table backlog add INDEX `number_index` (`number_`);
+update backlog set number_ = id ;
+
+alter table user_ add `description` text;

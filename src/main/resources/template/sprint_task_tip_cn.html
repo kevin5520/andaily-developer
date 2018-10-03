@@ -1,0 +1,23 @@
+<div>
+    创建人: <span class='text-info'>$creator$</span><br/>
+    创建时间: <span class='text-info'>$createTime$</span><br/>
+    估算时间: <span class='text-info'>$estimateTime$</span><br/>
+    优先级: <span class='text-warning'>$priority$</span><br/>
+    $if(isPending)$
+    开始时间: <span class='text-info'>$pendingTime$</span><br/>
+    $endif$
+    $if(isCanceled)$
+    取消时间: <span class='text-info'>$cancelTime$</span><br/>
+    取消人: <span class='text-info'>$cancelUser$</span><br/>
+    $endif$
+    $if(isFinished)$
+    完成时间: <span class='text-info'>$finishTime$</span><br/>
+    实际使用: <span class='text-info'>$actualUsedTime$</span> $timeDifferenceAsHtml$<br/>
+    <span class='text-info'>$finishComment$</span><br/>
+    $endif$
+
+    $if(urgent)$
+    <span class='red'>紧急</span><br/>
+    $endif$
+    <span class='text-info'>$description$</span><br/>
+</div>

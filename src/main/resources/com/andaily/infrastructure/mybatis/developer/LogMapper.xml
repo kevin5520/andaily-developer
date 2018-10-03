@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.infrastructure.mybatis.developer.LogRepositoryMyBatis">
+
+    <resultMap type="Log" id="logMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="content" column="content"/>
+        <association property="operator" column="operator_id"
+                     select="com.andaily.infrastructure.mybatis.user.DeveloperRepositoryMyBatis.findDeveloperById"/>
+
+        <discriminator column="type_" javaType="String">
+            <case value="SprintActivityLog" resultMap="sprintActivityLogMap"/>
+        </discriminator>
+    </resultMap>
+
+    <resultMap type="SprintActivityLog" id="sprintActivityLogMap" extends="logMap">
+
+        <association property="sprint" column="sprint_id"
+                     select="com.andaily.infrastructure.mybatis.developer.SprintRepositoryMyBatis.findSprintById"/>
+        <association property="task" column="task_id"
+                     select="com.andaily.infrastructure.mybatis.developer.SprintRepositoryMyBatis.findTaskById"/>
+        <association property="meeting" column="meeting_id"
+                     select="com.andaily.infrastructure.mybatis.developer.SprintRepositoryMyBatis.findMeetingById"/>
+
+    </resultMap>
+
+
+    <select id="findByGuid" parameterType="String" resultMap="logMap">
+         select * from log where  guid = #{guid}
+	</select>
+
+    <select id="findSprintActivityLogs" parameterType="map" resultMap="sprintActivityLogMap">
+        select l.* from log l, sprint s
+        where  l.sprint_id = s.id
+        and s.guid = #{sprintGuid}
+        and l.type_ = 'SprintActivityLog'
+        order by l.create_time desc
+        limit #{startIndex}, #{perPageSize}
+	</select>
+
+    <select id="totalSprintActivityLogs" parameterType="map" resultType="int">
+        select count(l.id) from log l, sprint s
+        where  l.sprint_id = s.id
+        and s.guid = #{sprintGuid}
+        and l.type_ = 'SprintActivityLog'
+	</select>
+
+
+    <insert id="saveSprintActivityLog" parameterType="SprintActivityLog" useGeneratedKeys="true" keyProperty="id">
+        insert into log(guid,archived,create_time,type_,content,
+        operator_id,task_id, sprint_id,meeting_id)
+        values
+        (#{guid},#{archived},#{createTime},'SprintActivityLog',#{content},
+        #{operator.id}, #{task.id}, #{sprint.id}, #{meeting.id})
+    </insert>
+
+
+    <!--<delete id="deleteDocument" parameterType="Document" flushCache="true">-->
+    <!--delete from document where guid = #{guid}-->
+    <!--</delete>-->
+
+</mapper>

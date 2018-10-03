@@ -1,0 +1,22 @@
+<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
+<!--
+ TestNg suit.
+Shengzhao Li
+-->
+<suite name="TestNg suite">
+    <test name="Domain test">
+        <!--<classes>-->
+        <!--<class name="com.zzl.qos.infrastructure.persistence.hibernate.AddressRepositoryHibernateTest"/>-->
+        <!--</classes>-->
+        <packages>
+            <package name="com.andaily.domain.*"/>
+            <package name="com.andaily.domain.*.*"/>
+        </packages>
+    </test>
+
+    <test name="Infrastructure test">
+        <packages>
+            <package name="com.andaily.infrastructure.mybatis.*"/>
+        </packages>
+    </test>
+</suite>

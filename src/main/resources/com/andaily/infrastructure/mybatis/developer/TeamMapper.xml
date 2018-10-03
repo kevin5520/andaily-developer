@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.infrastructure.mybatis.developer.TeamRepositoryMyBatis">
+
+    <resultMap type="Team" id="teamMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="name" column="name_"/>
+        <result property="description" column="description"/>
+
+        <association property="creator" column="creator_id"
+                     select="com.andaily.infrastructure.mybatis.user.UserRepositoryMyBatis.findUserById"/>
+
+        <collection property="teamProjects" column="id" select="findTeamProjectByTeamId"/>
+        <collection property="members" column="id"
+                    select="com.andaily.infrastructure.mybatis.user.DeveloperRepositoryMyBatis.findDeveloperByTeamId"/>
+
+    </resultMap>
+
+    <resultMap type="Team" id="teamSimpleMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="name" column="name_"/>
+        <result property="description" column="description"/>
+    </resultMap>
+
+
+    <resultMap type="TeamProject" id="teamProjectMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <association property="team" column="team_id" select="findSimpleTeamById"/>
+        <association property="project" column="project_id"
+                     select="com.andaily.infrastructure.mybatis.developer.ProjectRepositoryMyBatis.findSimpleProjectById"/>
+
+    </resultMap>
+
+
+    <select id="findTeamById" parameterType="int" resultMap="teamMap">
+         select a.* from team a
+         where a.id = #{id}
+	</select>
+
+    <select id="findSimpleTeamById" parameterType="int" resultMap="teamSimpleMap">
+         select a.* from team a
+         where a.id = #{id}
+	</select>
+
+    <select id="findTeamProjectByTeamId" parameterType="int" resultMap="teamProjectMap">
+         select a.* from team_project a
+         where a.team_id = #{teamId}
+	</select>
+
+    <select id="findTeamProjectByProjectId" parameterType="int" resultMap="teamProjectMap">
+         select a.* from team_project a
+         where a.project_id = #{projectId}
+	</select>
+
+
+    <select id="findByGuid" parameterType="String" resultMap="teamMap">
+        select a.* from team a
+        where a.guid = #{guid}
+    </select>
+
+
+    <select id="findTeamsByProjectGuid" parameterType="String" resultMap="teamMap">
+        select a.* from team a, team_project tp,project p
+        where a.archived = 0
+        and a.id = tp.team_id
+        and p.id = tp.project_id
+        and p.guid = #{projectGuid}
+    </select>
+
+    <select id="findAvailableTeams" resultMap="teamMap">
+        select a.* from team a
+        where a.archived = 0
+    </select>
+
+    <select id="findOverviewTeams" parameterType="map" resultMap="teamMap">
+        select a.* from team a
+        where a.archived = #{archived}
+        <if test="name != null">
+            and a.name_ like #{name}
+        </if>
+        order by a.create_time desc
+        limit #{startIndex}, #{perPageSize}
+    </select>
+
+    <select id="totalOverviewTeams" parameterType="map" resultType="int">
+        select count(a.id) from team a
+        where a.archived = #{archived}
+        <if test="name != null">
+            and a.name_ like #{name}
+        </if>
+    </select>
+
+    <insert id="saveTeam" parameterType="Team" useGeneratedKeys="true" keyProperty="id">
+        insert into team(
+        guid, create_time, archived, name_, creator_id,description)
+        values (
+        #{guid}, #{createTime}, #{archived}, #{name}, #{creator.id}, #{description}
+        )
+    </insert>
+
+    <insert id="saveTeamProject" parameterType="TeamProject" useGeneratedKeys="true" keyProperty="id">
+        insert into team_project(
+        guid, create_time, archived, team_id, project_id)
+        values (
+        #{guid}, #{createTime}, #{archived}, #{team.id}, #{project.id}
+        )
+    </insert>
+
+
+    <update id="updateTeam" parameterType="Team" flushCache="true">
+        update team set
+        name_ = #{name},
+        description = #{description},
+        archived = #{archived}
+        where
+        guid = #{guid}
+    </update>
+
+    <delete id="deleteTeamProject" parameterType="TeamProject" flushCache="true">
+        delete from team_project
+        where guid = #{guid}
+    </delete>
+
+    <delete id="deleteTeamProjects" flushCache="true">
+        delete from team_project
+        where guid in
+        <foreach item="item" index="index" collection="teamProjects" open="(" separator="," close=")">
+            #{item.guid}
+        </foreach>
+    </delete>
+
+
+</mapper>

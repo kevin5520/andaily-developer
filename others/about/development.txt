@@ -1,0 +1,14 @@
+
+Deployment environment
+
+JDK:            1.6.0_27
+Tomcat:       6.0.33
+Mvn:            3.1.0
+
+
+
+Upgrade
+
+JDK:      1.7.0_40
+Tomcat: 7.0.47
+Mvn:       3.1.0

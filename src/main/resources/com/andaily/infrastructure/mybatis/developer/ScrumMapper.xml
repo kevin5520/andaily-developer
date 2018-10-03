@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.infrastructure.mybatis.developer.ScrumRepositoryMyBatis">
+
+    <resultMap type="ScrumComment" id="scrumCommentMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="commentTime" column="comment_time"/>
+        <result property="content" column="content"/>
+
+        <association property="developer" column="developer_id"
+                     select="com.andaily.infrastructure.mybatis.user.DeveloperRepositoryMyBatis.findDeveloperById"/>
+
+    </resultMap>
+
+
+    <select id="findCommentByGuid" parameterType="String" resultMap="scrumCommentMap">
+         select a.* from scrum_comment a where a.guid = #{guid}
+         and a.archived = 0
+	</select>
+
+    <insert id="saveComment" parameterType="ScrumComment" useGeneratedKeys="true" keyProperty="id">
+        insert into scrum_comment(
+        guid, create_time, archived, content, developer_id, comment_time)
+        values (
+        #{guid}, #{createTime}, #{archived}, #{content}, #{developer.id}, #{commentTime}
+        )
+    </insert>
+
+</mapper>

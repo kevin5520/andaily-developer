@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
+<!--
+Hibernate persistence testNg suit.
+Shengzhao Li
+-->
+<suite name="persistence suite">
+    <test name="persistence suite Hibernate test">
+        <!--<classes>-->
+        <!--<class name="com.zzl.qos.infrastructure.persistence.hibernate.AddressRepositoryHibernateTest"/>-->
+        <!--</classes>-->
+        <packages>
+            <package name="com.andaily.infrastructure.mybatis.user"/>
+            <package name="com.andaily.infrastructure.mybatis.account"/>
+        </packages>
+    </test>
+</suite>

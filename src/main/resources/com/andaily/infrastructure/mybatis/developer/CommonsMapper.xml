@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.andaily.infrastructure.mybatis.developer.CommonsRepositoryMyBatis">
+
+    <resultMap type="GeckoFile" id="geckoFileMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="name" column="name_"/>
+        <result property="path" column="path_"/>
+
+        <result property="suffix" column="suffix"/>
+        <result property="temp" column="temp_"/>
+        <result property="size" column="size_"/>
+
+        <!--<discriminator column="type_" javaType="String">-->
+        <!--<case value="Photo" resultMap="photoMap"/>-->
+        <!--</discriminator>-->
+    </resultMap>
+
+    <resultMap type="Document" id="documentMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <result property="name" column="name_"/>
+        <result property="path" column="path_"/>
+
+        <association property="creator" column="creator_id"
+                     select="com.andaily.infrastructure.mybatis.user.UserRepositoryMyBatis.findUserById"/>
+        <association property="file" column="file_id" select="findGeckoFileById"/>
+
+        <discriminator column="type_" javaType="String">
+            <case value="BacklogDocument" resultMap="backlogDocumentMap"/>
+        </discriminator>
+    </resultMap>
+
+    <resultMap type="BacklogDocument" id="backlogDocumentMap" extends="documentMap">
+        <id property="id" column="id"/>
+        <result property="guid" column="guid"/>
+        <result property="archived" column="archived"/>
+        <result property="createTime" column="create_time"/>
+
+        <association property="backlog" column="backlog_id"
+                     select="com.andaily.infrastructure.mybatis.developer.BacklogRepositoryMyBatis.findBacklogById"/>
+    </resultMap>
+
+
+    <select id="findGeckoFileByGuid" parameterType="String" resultMap="geckoFileMap">
+         select * from gecko_file where  guid = #{guid}
+	</select>
+
+    <select id="findDocumentByGuid" parameterType="String" resultMap="documentMap">
+         select * from document where  guid = #{guid}
+	</select>
+
+    <select id="findGeckoFileById" parameterType="Integer" resultMap="geckoFileMap">
+         select * from gecko_file where id = #{id}
+	</select>
+
+    <select id="findBacklogDocumentByBacklogId" parameterType="Integer" resultMap="backlogDocumentMap">
+         select * from document
+         where backlog_id = #{backlogId}
+         and type_ = 'BacklogDocument'
+	</select>
+
+
+    <insert id="saveGeckoFile" parameterType="GeckoFile" useGeneratedKeys="true" keyProperty="id">
+        insert into gecko_file(guid,archived,create_time,name_,path_,
+        suffix,temp_, size_)
+        values
+        (#{guid},#{archived},#{createTime},#{name},#{path},
+        #{suffix}, #{temp}, #{size})
+    </insert>
+
+    <insert id="saveBacklogDocument" parameterType="BacklogDocument" useGeneratedKeys="true" keyProperty="id">
+        insert into document(guid,archived,create_time,creator_id,file_id,
+        backlog_id,type_)
+        values
+        (#{guid},#{archived},#{createTime},#{creator.id},#{file.id},
+        #{backlog.id}, 'BacklogDocument')
+    </insert>
+
+
+    <update id="updateGeckoFile" parameterType="GeckoFile" flushCache="true">
+        update gecko_file set
+        name_ = #{name},
+        path_ = #{path},
+        suffix = #{suffix},
+        temp_ = #{temp},
+        size_ = #{size}
+        where guid = #{guid}
+    </update>
+
+
+    <delete id="deleteGeckoFile" parameterType="GeckoFile" flushCache="true">
+        delete from gecko_file where guid = #{guid}
+    </delete>
+
+    <delete id="deleteDocument" parameterType="Document" flushCache="true">
+        delete from document where guid = #{guid}
+    </delete>
+
+</mapper>

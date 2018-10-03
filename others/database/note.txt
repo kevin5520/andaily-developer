@@ -1,0 +1,14 @@
+CloudBees test database(only 5M)
+
+Host: ec2-23-21-211-172.compute-1.amazonaws.com
+DB: andaily_developer_test
+User: ad_developer
+Pass: ad_developer
+
+
+CloudBees development database
+
+Host: ec2-50-19-213-178.compute-1.amazonaws.com
+DB: andaily_developer
+User: andaily_d
+Pass: andaily_d
