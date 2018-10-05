@@ -14,7 +14,7 @@
     <!--file-->
     <appender name="File" class="org.apache.log4j.FileAppender">
         <param name="Append" value="true"/>
-        <param name="File" value="C:/Work/Source Code/andaily-developer/log_files/ad-basic.log"/>
+        <param name="File" value="D:\Work\source_code\andaily-developer\log_files/ad-basic.log"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d %p [%c] - %m%n"/>
         </layout>
@@ -23,7 +23,7 @@
     <!--exception file appender-->
     <appender name="exceptionAppender" class="org.apache.log4j.FileAppender">
         <param name="Append" value="true"/>
-        <param name="File" value="C:/Work/Source Code/andaily-developer/log_files/ad-exception.log"/>
+        <param name="File" value="D:\Work\source_code\andaily-developer\log_files/ad-exception.log"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d %p [%c] - %m%n"/>
         </layout>
@@ -31,7 +31,7 @@
 
     <!--action daily-->
     <appender name="actionDaily" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="C:/Work/Source Code/andaily-developer/log_files/ad-action.log"/>
+        <param name="File" value="D:\Work\source_code\andaily-developer\log_files/ad-action.log"/>
         <param name="Append" value="true"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd'.log'"/>
         <layout class="org.apache.log4j.PatternLayout">
@@ -41,7 +41,7 @@
 
     <!--mail daily-->
     <appender name="mailDaily" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="C:/Work/Source Code/andaily-developer/log_files/ad-mail.log"/>
+        <param name="File" value="D:\Work\source_code\andaily-developer\log_files/ad-mail.log"/>
         <param name="Append" value="true"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd'.log'"/>
         <layout class="org.apache.log4j.PatternLayout">
