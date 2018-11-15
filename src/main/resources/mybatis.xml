@@ -36,6 +36,9 @@
         <typeAlias alias="SprintActivityLog" type="com.andaily.domain.log.SprintActivityLog"/>
 
         <typeAlias alias="SystemConfiguration" type="com.andaily.domain.shared.system.SystemConfiguration"/>
+        
+        <!-- test table -->
+        <typeAlias alias="TestTable" type="com.andaily.domain.user.TestTable"/>
 
 
         <!--data-->

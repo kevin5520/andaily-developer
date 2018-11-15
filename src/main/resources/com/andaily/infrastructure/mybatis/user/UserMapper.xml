@@ -24,6 +24,12 @@
                   resultMap="com.andaily.infrastructure.mybatis.user.DeveloperRepositoryMyBatis.developerMap"/>
         </discriminator>
     </resultMap>
+    
+    <resultMap type="TestTable" id="testTableMap">
+        <result property="name" column="name"/>
+        <result property="age" column="age"/>
+        <result property="gender" column="gender"/>
+    </resultMap>
 
     <resultMap type="ScrumTermData" id="scrumTermDataMap">
         <result property="count" column="count_"/>
@@ -139,5 +145,14 @@
         archived = #{archived}
         where guid = #{guid}
     </update>
+    
+    <insert id="saveRecord" parameterType="String">
+		insert into test_table(name,age,gender)
+        values (#{userName},#{userAge},#{userGender})
+    </insert>
+    
+    <select id="findRecord" parameterType="String" resultType="TestTable" resultMap="testTableMap">
+         select * from test_table where name = #{userName}
+	</select>
 
 </mapper>

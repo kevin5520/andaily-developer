@@ -47,6 +47,10 @@
     <div class="span2">
         <a class="btn btn-success btn-small" href="user_form/create"><i
                 class="icon-plus icon-white"></i> <spring:message code="user.overview.page.add.user" text="Add user"/></a>
+         
+         <a class="btn btn-success btn-small" href="${contextPath}/developer/KevinController/load_my_first_page"><i
+                class="icon-plus icon-white"></i> <spring:message text="Test button"/></a>
+         
     </div>
 
 </div>
