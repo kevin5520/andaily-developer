@@ -20,6 +20,7 @@ import java.util.Map;
 public class ProjectOverviewDto extends DefaultPaginated<ProjectDto> {
 
     private String name;
+    private String projectCode;
     private String teamGuid;
     private String productOwnerGuid;
 
@@ -32,6 +33,7 @@ public class ProjectOverviewDto extends DefaultPaginated<ProjectDto> {
     public Map<String, Object> queryMap() {
         Map<String, Object> map = super.defaultQueryMap();
         map.put("name", StringUtils.isNotEmpty(name) ? "%" + name + "%" : null);
+        map.put("projectCode", StringUtils.isNotEmpty(projectCode) ? "%" + projectCode + "%" : null);
 
         final User currUser = SecurityUtils.currUser();
         if (isShowTeamCondition()) {
@@ -81,8 +83,17 @@ public class ProjectOverviewDto extends DefaultPaginated<ProjectDto> {
     public void setName(String name) {
         this.name = name;
     }
+    
+    
+    public String getProjectCode() {
+		return projectCode;
+	}
 
-    public String getProductOwnerGuid() {
+	public void setProjectCode(String projectCode) {
+		this.projectCode = projectCode;
+	}
+
+	public String getProductOwnerGuid() {
         return productOwnerGuid;
     }
 

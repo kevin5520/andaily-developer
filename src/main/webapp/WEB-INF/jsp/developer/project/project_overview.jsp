@@ -19,6 +19,8 @@
         <form action="" id="projectForm" class="form-inline">
             <spring:message code="project.overview.page.form.project.name" text="Project name" var="projectNameMessage"/>
             <input type="text" name="name" value="${projectOverviewDto.name}" placeholder="${projectNameMessage}"/>
+            <spring:message  text="Project cade" var="projectNameMessage"/>
+            <input type="text" name="projectCode" value="${projectOverviewDto.projectCode}" placeholder="${projectNameMessage}"/>
             <c:if test="${projectOverviewDto.showTeamCondition}">
                 <select name="teamGuid" class="input-medium">
                     <option value=""><spring:message code="project.overview.page.form.all.teams" text="All Teams"/></option>
