@@ -31,7 +31,7 @@ public class BacklogOverviewDto extends DefaultPaginated<BacklogDto> {
         Map<String, Object> map = super.defaultQueryMap();
         map.put("priority", priority);
         map.put("type", type);
-        map.put("number", number);
+        map.put("number", StringUtils.isEmpty(number) ? null : number);
 
         map.put("sprintGuid", StringUtils.isEmpty(sprintGuid) ? null : sprintGuid);
         map.put("projectGuid", (isSpecifyProject() ? projectGuid : null));
