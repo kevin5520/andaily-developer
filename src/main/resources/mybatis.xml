@@ -42,6 +42,11 @@
         <typeAlias alias="SimpleProjectData" type="com.andaily.infrastructure.mybatis.data.SimpleProjectData"/>
         <typeAlias alias="ScrumTermData" type="com.andaily.infrastructure.mybatis.data.ScrumTermData"/>
         <typeAlias alias="SprintTaskTimeData" type="com.andaily.infrastructure.mybatis.data.SprintTaskTimeData"/>
+        
+        
+        <typeAlias alias="TestTable" type="com.andaily.domain.user.TestTable"/>
+        <typeAlias alias="TestsortTable" type="com.andaily.domain.user.TestsortTable"/>
+
 
     </typeAliases>
 

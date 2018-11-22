@@ -31,6 +31,25 @@
     </resultMap>
 
 
+
+
+<resultMap type="TestTable" id="testTableMap">
+        <result property="name" column="name"/>
+        <result property="age" column="age"/>
+        <result property="gender" column="gender"/>
+    </resultMap>
+
+
+<resultMap type="TestsortTable" id="testsortTableMap">
+        <result property="nick_name" column="nick_name"/>
+      <!--   <result property="id" column="id"/> -->
+      <result property="count" column="count(nick_name)"/>
+    </resultMap>
+
+
+
+
+
     <select id="findByGuid" parameterType="String" resultType="User" resultMap="userMap">
          select * from user_ where  guid = #{guid}
 	</select>
@@ -139,5 +158,21 @@
         archived = #{archived}
         where guid = #{guid}
     </update>
+    
+    <insert id="saveRecord" parameterType="String">
+		insert into test_table(name,age,gender)
+        values (#{userName},#{userAge},#{userGender})
+    </insert>
+    
+    
+    <select id="findRecord" parameterType="String" resultType="TestTable" resultMap="testTableMap">
+         select * from test_table where name = #{userName}
+	</select>
+
+ <select id="findsortRecord"  resultType="TestsortTable" resultMap="testsortTableMap">
+         <!-- select * from user_ where nick_name = #{userName} -->
+         <!-- select distinct nick_name from user_ join sprint_task on user_.id=sprint_task.executor_id where nick_name = #{userName} -->
+         select  nick_name , count(nick_name) from user_ join sprint_task on user_.id=sprint_task.executor_id where nick_name = #{userName} and status='CREATED'
+	</select>
 
 </mapper>

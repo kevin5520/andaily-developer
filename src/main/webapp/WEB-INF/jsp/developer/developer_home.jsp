@@ -38,6 +38,13 @@
             <input type="hidden" name="status" value="${developerOverviewDto.status}" id="taskStatus"/>
             <input type="hidden" name="onlyShowMyTasks" value="${developerOverviewDto.onlyShowMyTasks}"/>
         </form>
+        
+        
+        <a class="btn btn-success btn-small" href="${contextPath}/developer/sortController/001"><i
+                class="icon-white"></i> <spring:message  text="Personal tasks satistics"/></a>
+        
+        
+        
     </div>
     <div class="span3">
         <spring:message code="developer.home.page.form.curr.sprint.finished" text="finished" var="finishedMessage"/>

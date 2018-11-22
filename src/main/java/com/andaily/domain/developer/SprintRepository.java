@@ -2,6 +2,7 @@ package com.andaily.domain.developer;
 
 import com.andaily.domain.developer.project.Project;
 import com.andaily.domain.shared.Repository;
+import com.andaily.domain.user.TestTable;
 import com.andaily.domain.user.User;
 import com.andaily.infrastructure.mybatis.data.SprintTaskTimeData;
 import org.apache.ibatis.annotations.Param;
@@ -98,4 +99,6 @@ public interface SprintRepository extends Repository {
     int totalSprintTasksOfBacklog(Backlog backlog);
 
     Date lastFinishedTaskTimeBySprint(Sprint sprint);
+    
+    
 }
