@@ -60,6 +60,9 @@
         <if test="number != null">
             and a.number_ = #{number}
         </if>
+        <if test="content != null">
+            and a.content like #{content}
+        </if>
         <if test="priority != null">
             and a.priority = #{priority}
         </if>
