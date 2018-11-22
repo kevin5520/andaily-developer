@@ -19,6 +19,12 @@
             <spring:message code="team.overview.page.form.team.name" text="Team name" var="teamNameMessage"/>
             <input type="text" name="name" value="${teamOverviewDto.name}" title="${teamNameMessage}"
                    placeholder="${teamNameMessage}" class="input-medium"/>
+                   
+                   
+            <spring:message text="Create Time" var="createDateMessage"/>
+            <input type="text" name="createDate"  value="${teamOverviewDto.createDate}" title="${createDateMessage}"
+                   placeholder="${createDateMessage}" class="input-medium"/>
+                   
             &nbsp;
             <label class="checkbox">
                 <input type="checkbox" name="archived" ${teamOverviewDto.archived?'checked':''}/> <spring:message code="team.overview.page.form.archived" text="Archived"/>
