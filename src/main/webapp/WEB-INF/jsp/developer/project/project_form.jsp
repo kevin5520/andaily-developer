@@ -59,6 +59,23 @@
                         </td>
                         <td>&nbsp;</td>
                     </tr>
+                    
+                    <tr>
+                        <td>
+                            <label for="startDate"><spring:message text="Start date"/></label>
+
+                            <div class="input-append date" id="startDate">
+                                <spring:message text="Start date" var="startDateHolderMessage"/>
+                                <form:input path="startDate" placeholder="${startDateHolderMessage}" cssClass="span2"/>
+                                <span class="add-on"><i class="icon-th"></i></span>
+                            </div>
+                            <form:errors path="startDate" cssClass="label label-warning"/>
+                            <span class="help-block"><spring:message text="Specify the project start date (optional)."/></span>
+                        </td>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                    
                     <tr>
                         <td colspan="2">
                             <label for="description"><spring:message code="project.form.page.description" text="Description"/></label>

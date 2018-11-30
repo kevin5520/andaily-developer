@@ -24,11 +24,16 @@ public class Project extends AbstractDomain {
     private String code;
     private String description;
 
+    private String status;
+    
     private User creator;
     /**
      * Null is available. it's mean the project is unlimited
      */
     private Date finishDate;
+    
+    private Date startDate;
+    
 
     private List<Sprint> sprints = new ArrayList<>();
 
@@ -60,6 +65,13 @@ public class Project extends AbstractDomain {
     public String description() {
         return description;
     }
+    
+    
+    public String status() {
+        return status;
+    }
+    
+    
 
     public User creator() {
         return creator;
@@ -87,8 +99,17 @@ public class Project extends AbstractDomain {
         return finishDate;
     }
 
+    public Date startDate() {
+        return startDate;
+    }
+    
     public Project finishDate(Date finishDate) {
         this.finishDate = finishDate;
+        return this;
+    }
+    
+    public Project startDate(Date startDate) {
+        this.startDate = startDate;
         return this;
     }
 
@@ -131,6 +152,13 @@ public class Project extends AbstractDomain {
         return this;
     }
 
+    
+    public Project status(String status) {
+        this.status = status;
+        return this;
+    }
+    
+    
     public Project description(String description) {
         this.description = description;
         return this;

@@ -1,0 +1,4 @@
+2018-11-30 23:41:48,969 DEBUG [com.andaily.domain.developer.operation.ProjectFormDtoPersister] - Kevin update the project [4d0e493e65ab4a2996c7c2f0a8638a4b]
+2018-11-30 23:43:13,868 DEBUG [com.andaily.domain.developer.operation.ProjectFormDtoPersister] - Kevin create a new project [fc3e7a8f14c34ee09a54bcccbf11c3f9]
+2018-11-30 23:49:30,375 DEBUG [com.andaily.domain.developer.operation.ProjectFormDtoPersister] - Kevin update the project [fc3e7a8f14c34ee09a54bcccbf11c3f9]
+2018-11-30 23:49:42,486 DEBUG [com.andaily.domain.developer.operation.ProjectFormDtoPersister] - Kevin update the project [4d0e493e65ab4a2996c7c2f0a8638a4b]

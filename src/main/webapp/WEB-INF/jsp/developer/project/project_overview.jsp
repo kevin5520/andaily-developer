@@ -80,13 +80,23 @@
     <div class="span12">
         <spring:message code="project.overview.page.table.name" text="Name" var="nameMessage"/>
         <spring:message code="project.overview.page.table.code" text="Code" var="codeMessage"/>
+        
+    
+        <spring:message text="Start date" var="startDateMessage"/>
+        
         <spring:message code="project.overview.page.table.finish.date" text="Finish date" var="finishDateMessage"/>
+        
+        <spring:message text="Status" var="statusMessage"/>
+        
+        
         <spring:message code="project.overview.page.table.product.owner" text="Product owner" var="productOwnerMessage"/>
         <spring:message code="project.overview.page.table.team" text="Team" var="teamMessage"/>
-
+       
+        
         <displaytag:table list="${projectOverviewDto}" class="table table-hover table-striped" id="project"
                           form="projectForm">
-            <displaytag:column title="${nameMessage}" headerClass="width40">
+            
+            <displaytag:column title="${nameMessage}">
                 <div class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             ${project.name}
@@ -98,14 +108,20 @@
                 </div>
             </displaytag:column>
             <displaytag:column title="${codeMessage}" property="code" style="vertical-align: middle;"/>
-            <displaytag:column title="${finishDateMessage}" property="finishDateAsText" style="vertical-align: middle;"
-                               class="text-success"/>
+            
+			<displaytag:column title="${startDateMessage}" property="startDateAsText" style="vertical-align: middle;" class="text-success"/>
+            
+            <displaytag:column title="${finishDateMessage}" property="finishDateAsText" style="vertical-align: middle;" class="text-success"/>
+            
+            <displaytag:column title="${statusMessage}" property="status" style="vertical-align: middle;"/>
+            
             <displaytag:column title="${productOwnerMessage}" property="productOwnersAsText" style="vertical-align: middle;"/>
             <displaytag:column title="${teamMessage}" property="teamsAsText" style="vertical-align: middle;"/>
-            <%--<displaytag:column title="Create time" property="createTime" style="vertical-align: middle;"/>--%>
-            <displaytag:column title="&nbsp;" style="vertical-align: middle;">
-                <a href="javascript:void(0)" data-content="${project.htmlTip}" class="projectDetails"><i
-                        class="icon-info-sign"></i></a>
+           
+            <displaytag:column title="Create time" property="createTime" style="vertical-align: middle;"/>
+
+            <displaytag:column title="Description" property="description" style="vertical-align: middle;">
+            
             </displaytag:column>
         </displaytag:table>
     </div>

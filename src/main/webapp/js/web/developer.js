@@ -695,6 +695,12 @@ ProjectForm.prototype = {
             language:language,
             weekStart:1
         });
+        $('#startDate').datepicker({
+            format:'yyyy-mm-dd',
+            autoclose:true,
+            language:language,
+            weekStart:1
+        });
     }
 };
 

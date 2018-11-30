@@ -34,6 +34,11 @@ public class ProjectDto extends AbstractDTO {
     protected UserDto creator;
     protected String finishDate;
 
+    protected String startDate;
+    
+    protected String status;
+    
+    
     protected int amountOfSprints;
     protected int amountOfBacklogs;
 
@@ -51,10 +56,19 @@ public class ProjectDto extends AbstractDTO {
         this.name = project.name();
         this.code = project.code();
         this.description = project.description();
-
+        
+        this.status = project.status();
+        
+        
         Date date = project.finishDate();
         if (date != null) {
             this.finishDate = DateUtils.toDateText(date);
+        }
+        
+        
+        Date date2 = project.startDate();
+        if (date2 != null) {
+            this.startDate = DateUtils.toDateText(date2);
         }
 
         this.amountOfBacklogs = project.backlogs().size();
@@ -108,9 +122,22 @@ public class ProjectDto extends AbstractDTO {
     public String getCreateTime() {
         return createTime;
     }
+    
+    
+
+    
+    
+    public String getStatus() {
+        return status;
+        
+    }
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+    
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getName() {
@@ -148,6 +175,10 @@ public class ProjectDto extends AbstractDTO {
     public String getFinishDate() {
         return finishDate;
     }
+    
+    public String getStartDate() {
+        return startDate;
+    }
 
     public String getFinishDateAsText() {
         if (StringUtils.isEmpty(finishDate)) {
@@ -155,9 +186,20 @@ public class ProjectDto extends AbstractDTO {
         }
         return finishDate;
     }
+    public String getStartDateAsText() {
+        if (StringUtils.isEmpty(startDate)) {
+            return MessageUtils.getMessage(END_DATE_UNLIMITED_CODE);
+        }
+        return startDate;
+    }
 
+    
+    
     public void setFinishDate(String finishDate) {
         this.finishDate = finishDate;
+    }
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
     public static List<ProjectDto> toDtos(List<Project> projects) {

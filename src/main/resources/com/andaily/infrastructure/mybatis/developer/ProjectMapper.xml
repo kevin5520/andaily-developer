@@ -8,24 +8,25 @@
         <result property="guid" column="guid"/>
         <result property="archived" column="archived"/>
         <result property="createTime" column="create_time"/>
-
         <result property="name" column="name_"/>
         <result property="code" column="code"/>
         <result property="description" column="description"/>
         <result property="finishDate" column="finish_date"/>
-
+		<result property="startDate" column="start_date"/>
+		<result property="status" column="status"/>
+        
         <association property="creator" column="creator_id"
-                     select="com.andaily.infrastructure.mybatis.user.UserRepositoryMyBatis.findUserById"/>
-
+                     select="com.andaily.infrastructure.mybatis.user.UserRepositoryMyBatis.findUserById"/>      
+                     
         <collection property="sprints" column="id"
                     select="com.andaily.infrastructure.mybatis.developer.SprintRepositoryMyBatis.findSprintByProjectId"
                     ofType="Sprint"/>
         <collection property="backlogs" column="id"
                     select="com.andaily.infrastructure.mybatis.developer.BacklogRepositoryMyBatis.findBacklogByProjectId"
                     ofType="Backlog"/>
-        <collection property="productOwners" column="id" select="findProjectProductOwnerByProjectId"
+        <collection property="productOwners" column="id"
+					select="findProjectProductOwnerByProjectId"
                     ofType="ProjectProductOwner"/>
-
         <collection property="teams" column="id"
                     select="com.andaily.infrastructure.mybatis.developer.TeamRepositoryMyBatis.findTeamProjectByProjectId"
                     ofType="TeamProject"/>
@@ -37,11 +38,12 @@
         <result property="guid" column="guid"/>
         <result property="archived" column="archived"/>
         <result property="createTime" column="create_time"/>
-
         <result property="name" column="name_"/>
         <result property="code" column="code"/>
         <result property="description" column="description"/>
         <result property="finishDate" column="finish_date"/>
+        <result property="startDate" column="start_date"/>
+        <result property="status" column="status"/>
 
     </resultMap>
 
@@ -50,11 +52,10 @@
         <result property="guid" column="guid"/>
         <result property="archived" column="archived"/>
         <result property="createTime" column="create_time"/>
-
+        
         <association property="project" column="project_id" select="findProjectById"/>
         <association property="productOwner" column="product_owner_id"
                      select="com.andaily.infrastructure.mybatis.user.DeveloperRepositoryMyBatis.findDeveloperById"/>
-
     </resultMap>
 
 
@@ -199,10 +200,10 @@
             keyProperty="id">
         insert into project(
         guid, create_time, archived, name_, code, creator_id, description,
-        finish_date)
+        finish_date, start_date, status)
         values (
         #{guid}, #{createTime}, #{archived}, #{name}, #{code}, #{creator.id}, #{description},
-        #{finishDate})
+        #{finishDate}, #{startDate}, #{status})
     </insert>
 
     <insert id="saveProjectProductOwner" parameterType="ProjectProductOwner" useGeneratedKeys="true"
@@ -219,7 +220,9 @@
         name_ = #{name},
         code = #{code},
         finish_date = #{finishDate},
-        description = #{description}
+        start_date = #{startDate},
+        description = #{description},
+        status = #{status}
         where guid = #{guid}
     </update>
 

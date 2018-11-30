@@ -44,7 +44,8 @@ public class ProjectFormDtoPersister {
     private void updateProject() {
         Project existProject = projectRepository.findByGuid(projectFormDto.getGuid());
         Date finishDate = finishDate();
-        existProject.finishDate(finishDate)
+        Date startDate = startDate();
+        existProject.finishDate(finishDate).startDate(startDate)
                 .name(projectFormDto.getName())
                 .code(projectFormDto.getCode())
                 .description(projectFormDto.getDescription());
@@ -56,7 +57,9 @@ public class ProjectFormDtoPersister {
 
     private void createProject() {
         Date finishDate = finishDate();
+        Date startDate = startDate();
         Project project = projectFormDto.toDomain().finishDate(finishDate);
+        project.startDate(startDate);
         project.saveOrUpdate();
 
         updateProductOwners(projectRepository.findByGuid(project.guid()));
@@ -80,5 +83,10 @@ public class ProjectFormDtoPersister {
     private Date finishDate() {
         String finishDateAsText = projectFormDto.getFinishDate();
         return StringUtils.isEmpty(finishDateAsText) ? null : DateUtils.getDate(finishDateAsText);
+    }
+    
+    private Date startDate() {
+        String startDateAsText = projectFormDto.getStartDate();
+        return StringUtils.isEmpty(startDateAsText) ? null : DateUtils.getDate(startDateAsText);
     }
 }
