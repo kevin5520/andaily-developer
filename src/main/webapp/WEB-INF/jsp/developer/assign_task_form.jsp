@@ -12,7 +12,7 @@
 
 
 
-
+<!-- (WANG Hanlin)       button style -->
 
 <style>
 .redbutton {
@@ -48,25 +48,6 @@
 
 
 
-
-
-<!-- <style>
-#test {
-	visibility: hidden;
-	float: left;
-	border: 1px solid #333;
-	background: #FFF;
-	width: 530px;
-	height: 80px;
-	margin-left: -25px;
-	margin-top: 40px;
-	overflow: yes;
-	overflow: auto;
-	overflow-y: yes;
-	overflow-y: auto
-}
-</style> -->
-
 <div class="well well-small">
 	<div style="margin-left: 20px;">
 		<p class="text-info">
@@ -86,9 +67,9 @@
 
 
 
-		<!-- <div id=test></div> -->
+		
 
-
+<!--    (WANG Hanlin)     create button for page jumps -->
 <a href="${contextPath}/developer/sortController/001">
     <input type="button" class="redbutton"
 			style="margin-left: 50px; margin-top: -15px" name="bestchoice"

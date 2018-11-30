@@ -45,6 +45,8 @@
         
         
         <typeAlias alias="TestTable" type="com.andaily.domain.user.TestTable"/>
+        
+        <!--(WANG Hanlin) table data format-->
         <typeAlias alias="TestsortTable" type="com.andaily.domain.user.TestsortTable"/>
 
 

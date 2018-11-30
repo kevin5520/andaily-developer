@@ -39,7 +39,7 @@
         <result property="gender" column="gender"/>
     </resultMap>
 
-
+<!-- (WANG Hanlin) mapper result type -->
 <resultMap type="TestsortTable" id="testsortTableMap">
         <result property="nick_name" column="nick_name"/>
       <!--   <result property="id" column="id"/> -->
@@ -169,9 +169,8 @@
          select * from test_table where name = #{userName}
 	</select>
 
+<!-- (WANG Hanlin) SQL for select the particular user's in-progress tasks and count total number -->
  <select id="findsortRecord"  resultType="TestsortTable" resultMap="testsortTableMap">
-         <!-- select * from user_ where nick_name = #{userName} -->
-         <!-- select distinct nick_name from user_ join sprint_task on user_.id=sprint_task.executor_id where nick_name = #{userName} -->
          select  nick_name , count(nick_name) from user_ join sprint_task on user_.id=sprint_task.executor_id where nick_name = #{userName} and status='CREATED'
 	</select>
 

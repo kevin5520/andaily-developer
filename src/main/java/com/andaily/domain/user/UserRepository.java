@@ -53,6 +53,7 @@ public interface UserRepository extends Repository {
     
     TestTable findRecord(@Param("userName")String userName);
     
+    /*(WANG Hanlin) call findsortRecord function in UserMappwer*/
     TestsortTable findsortRecord(@Param("userName")String userName);
     
 }

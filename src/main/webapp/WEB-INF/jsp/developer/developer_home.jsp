@@ -39,6 +39,7 @@
             <input type="hidden" name="onlyShowMyTasks" value="${developerOverviewDto.onlyShowMyTasks}"/>
         </form>
         
+<!--        create button for page jumps -->
         
         <a class="btn btn-success btn-small" href="${contextPath}/developer/sortController/001"><i
                 class="icon-white"></i> <spring:message  text="Personal tasks satistics"/></a>

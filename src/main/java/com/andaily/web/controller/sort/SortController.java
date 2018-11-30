@@ -21,14 +21,14 @@ import com.andaily.web.context.BeanProvider;
 public class SortController {
 	private UserRepository userRepository = BeanProvider.getBean(UserRepository.class);
 	
-	
+// (WANG Hanlin)action function for jump the page to output_page(testsort)
 	 @RequestMapping("001")
 	    public String setupForm( Model model) {
 		 System.out.println("sort in 001");
 	        return "testsort";
 	    }
 	 
-	 
+//(WANG Hanlin)use the input from  output_page(testsort) call the findsortRecord in UserMapper, feed back the data back to output_page(testsort)
 	 @RequestMapping("003")
 	    public String setupForm3( String userName3, Model model) {
 		 

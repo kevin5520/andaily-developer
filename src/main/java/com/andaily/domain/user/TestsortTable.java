@@ -1,5 +1,6 @@
 package com.andaily.domain.user;
 
+//(WANG Hanlin) create table format for variable count and nick_name create get set function
 public class TestsortTable {
 
 	String nick_name;
@@ -9,13 +10,7 @@ public class TestsortTable {
 	public void setNick_name(String nick_name) {
 		this.nick_name = nick_name;
 	}
-	/*public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	int id;*/
+	
 	int count;
 	public int getCount() {
 		return count;
