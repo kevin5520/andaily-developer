@@ -14,6 +14,8 @@ public class TeamOverviewDto extends DefaultPaginated<TeamDto> {
 
     private String name;
     private boolean archived;
+    
+    private String createDate;
 
     public TeamOverviewDto() {
     }
@@ -22,6 +24,10 @@ public class TeamOverviewDto extends DefaultPaginated<TeamDto> {
     public Map<String, Object> defaultQueryMap() {
         final Map<String, Object> map = super.defaultQueryMap();
         map.put("name", StringUtils.isEmpty(name) ? null : "%" + name + "%");
+        
+        
+        map.put("createDate", StringUtils.isEmpty(createDate) ? null : "%" + createDate + "%");
+        
         map.put("archived", archived);
         return map;
     }
@@ -41,4 +47,13 @@ public class TeamOverviewDto extends DefaultPaginated<TeamDto> {
     public void setName(String name) {
         this.name = name;
     }
+   
+    public String getcreateDate() {
+        return createDate;
+    }
+
+    public void setcreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+        
 }

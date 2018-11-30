@@ -152,6 +152,9 @@
         <if test="name != null">
             and s.name_ like #{name}
         </if>
+        <if test="projectCode != null">
+            and s.code like #{projectCode}
+        </if>
         <if test="teamGuid != null">
             and s.id in (
             select project_id from team_project where team_id = (
