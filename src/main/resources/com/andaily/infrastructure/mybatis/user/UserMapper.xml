@@ -138,20 +138,5 @@
         archived = #{archived}
         where guid = #{guid}
     </update>
-    
-    <insert id="saveRecord" parameterType="String">
-		insert into test_table(name,age,gender)
-        values (#{userName},#{userAge},#{userGender})
-    </insert>
-    
-    <resultMap type="TestTable" id="testTableMap">
-        <result property="name" column="name"/>
-        <result property="age" column="age"/>
-        <result property="gender" column="gender"/>
-    </resultMap>
-    
-    <select id="findRecord" parameterType="String" resultType="TestTable" resultMap="testTableMap">
-         select * from test_table where name = #{userName}
-	</select>
 
 </mapper>
