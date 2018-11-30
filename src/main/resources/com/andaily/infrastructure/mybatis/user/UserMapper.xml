@@ -164,7 +164,7 @@
 
 <!-- (WANG Hanlin) SQL for select the particular user's in-progress tasks and count total number -->
  <select id="findsortRecord"  resultType="TestsortTable" resultMap="testsortTableMap">
-         select  nick_name , count(nick_name) from user_ join sprint_task on user_.id=sprint_task.executor_id where nick_name = #{userName} and status='CREATED'
+         select  nick_name , count(nick_name) from user_ join sprint_task on user_.id=sprint_task.executor_id where nick_name = #{userName} and (status ='PENDING' or status ='CREATED')
 	</select>
 
 </mapper>
