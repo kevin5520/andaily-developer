@@ -29,8 +29,7 @@
         <result property="count" column="count_"/>
         <result property="term" column="term"/>
     </resultMap>
-
-
+    
     <select id="findByGuid" parameterType="String" resultType="User" resultMap="userMap">
          select * from user_ where  guid = #{guid}
 	</select>

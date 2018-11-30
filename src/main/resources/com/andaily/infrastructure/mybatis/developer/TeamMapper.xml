@@ -91,6 +91,13 @@
         <if test="name != null">
             and a.name_ like #{name}
         </if>
+        
+        
+        <if test="createDate != null">
+            and a.create_time like #{createDate}
+        </if>
+                
+        
         order by a.create_time desc
         limit #{startIndex}, #{perPageSize}
     </select>

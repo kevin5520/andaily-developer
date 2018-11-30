@@ -155,7 +155,7 @@ public class TeamDto extends AbstractDTO {
     public String getCreatorName() {
         return creatorName;
     }
-
+		
     public void setCreatorName(String creatorName) {
         this.creatorName = creatorName;
     }

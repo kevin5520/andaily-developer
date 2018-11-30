@@ -46,4 +46,5 @@ public interface UserRepository extends Repository {
     List<ScrumTermData> findScrumTermDatas();
 
     User findByEmailIncludeArchived(String email);
+    
 }
