@@ -23,6 +23,7 @@ public class BacklogOverviewDto extends DefaultPaginated<BacklogDto> {
     private String sprintGuid;
     private SprintDto sprintDto;
     private String number;
+    private String content;
 
     public BacklogOverviewDto() {
     }
@@ -31,7 +32,8 @@ public class BacklogOverviewDto extends DefaultPaginated<BacklogDto> {
         Map<String, Object> map = super.defaultQueryMap();
         map.put("priority", priority);
         map.put("type", type);
-        map.put("number", number);
+        map.put("number", StringUtils.isEmpty(number) ? null : number);
+        map.put("content", StringUtils.isEmpty(content) ? null : "%" + content + "%");
 
         map.put("sprintGuid", StringUtils.isEmpty(sprintGuid) ? null : sprintGuid);
         map.put("projectGuid", (isSpecifyProject() ? projectGuid : null));
@@ -62,7 +64,15 @@ public class BacklogOverviewDto extends DefaultPaginated<BacklogDto> {
         this.number = number;
     }
 
-    public String getSprintGuid() {
+    public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getSprintGuid() {
         return sprintGuid;
     }
 

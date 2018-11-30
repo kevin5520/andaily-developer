@@ -31,8 +31,11 @@
             <input type="hidden" name="sprintGuid" value="${backlogOverviewDto.sprintGuid}"/>
 
             <spring:message code="backlog.overview.page.number" text="Backlog number" var="backlogNumberMessage"/>
-            <input type="text" name="number" value="${backlogOverviewDto.number}" placeholder="${backlogNumberMessage}"
-                   style="width: 120px;"/>
+            <input type="text" name="number" value="${backlogOverviewDto.number}" placeholder="${backlogNumberMessage}" style="width: 120px;"/>
+                  
+            <spring:message text="Content Text" var="contentMessage"/>
+            <input type="text" name="content" value="${backlogOverviewDto.content}" placeholder="${contentMessage}" style="width: 120px;"/>     
+             
             <select name="type" id="backlogTypeSelect" style="width: 120px;">
                 <option value=""><spring:message code="backlog.overview.page.all.types" text="All types"/></option>
                 <c:forEach items="${backlogOverviewDto.availableTypes}" var="s">
