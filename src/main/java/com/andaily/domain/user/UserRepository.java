@@ -47,7 +47,4 @@ public interface UserRepository extends Repository {
 
     User findByEmailIncludeArchived(String email);
     
-    void saveRecord(@Param("userName")String userName, @Param("userAge")String userAge, @Param("userGender")String userGender);
-    
-    TestTable findRecord(@Param("userName")String userName);
 }
