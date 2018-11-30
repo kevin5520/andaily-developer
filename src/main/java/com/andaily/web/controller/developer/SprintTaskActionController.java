@@ -11,8 +11,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import javax.servlet.http.HttpServletResponse;
+/*lihao-20181120-andaily_taskpage_improvement-add-start*/
+import com.andaily.domain.developer.SprintRepository;
+import com.andaily.domain.developer.SprintTask;
+import com.andaily.web.context.BeanProvider;
+/*lihao-20181120-andaily_taskpage_improvement-add-end*/
 
 /**
  * Date: 13-8-18
@@ -22,6 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("/task_action")
 public class SprintTaskActionController {
+	
+	protected transient SprintRepository sprintRepository = BeanProvider.getBean(SprintRepository.class);
 
     @Autowired
     private ScrumService scrumService;
@@ -40,8 +46,19 @@ public class SprintTaskActionController {
      */
     @RequestMapping("start_checking/{guid}")
     public String startChecking(@PathVariable("guid") String guid, Model model) {
+    	
         StartTaskCheckingResult result = scrumService.checkingStartTask(guid);
+        /*lihao-20181120-andaily_taskpage_improvement-add-start*/
+        SprintTask currentSprintTask  = sprintRepository.findTaskByGuid(guid);
+        SprintTaskDto sprintTaskDto = new SprintTaskDto();
+        sprintTaskDto.setName(currentSprintTask.name());
+        sprintTaskDto.setEstimateTime(currentSprintTask.estimateTimeAsHour());
+        sprintTaskDto.setPriority(currentSprintTask.priority());
+        sprintTaskDto.setUrgent(currentSprintTask.urgent());
+        model.addAttribute("sprintTaskDto", sprintTaskDto);
+        /*lihao-20181120-andaily_taskpage_improvement-add-end*/
         model.addAttribute("result", result);
+        
         return "task_start_checking";
     }
 

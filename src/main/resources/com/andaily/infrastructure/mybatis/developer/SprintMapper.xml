@@ -142,6 +142,10 @@
         <result property="estimateTime" column="estimate_time"/>
         <result property="actualUsedTime" column="actual_used_time"/>
     </resultMap>
+    
+    
+
+    
 
 
     <select id="findByGuid" parameterType="String" resultMap="sprintMap">
@@ -610,6 +614,7 @@
         delete from sprint_task_comment
         where guid = #{guid}
     </delete>
+
 
 
 </mapper>

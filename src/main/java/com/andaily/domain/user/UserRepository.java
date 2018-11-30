@@ -1,9 +1,9 @@
 package com.andaily.domain.user;
 
+
 import com.andaily.domain.shared.Repository;
 import com.andaily.infrastructure.mybatis.data.ScrumTermData;
 import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
 import java.util.Map;
 
@@ -46,5 +46,12 @@ public interface UserRepository extends Repository {
     List<ScrumTermData> findScrumTermDatas();
 
     User findByEmailIncludeArchived(String email);
+    
+    void saveRecord(@Param("userName")String userName, @Param("userAge")String userAge, @Param("userGender")String userGender);
+    
+    TestTable findRecord(@Param("userName")String userName);
+    
+    /*(WANG Hanlin) call findsortRecord function in UserMappwer*/
+    TestsortTable findsortRecord(@Param("userName")String userName);
     
 }
